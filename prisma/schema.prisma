@@ -7,13 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// ---- 1. schemas for auth ----- //
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 // https://next-auth.js.org/adapters/models#account
 model Account {
     id                String  @id @default(cuid())
@@ -51,6 +44,12 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    role          Role      @default(USER)
+}
+
+enum Role {
+    USER
+    ADMIN
 }
 
 // https://next-auth.js.org/adapters/models#verification-token
@@ -62,4 +61,18 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-// ---- 2. schemas defined by me ----- //
+/// Asset Type
+/// Currently there are 2 types of assets
+enum AssetType {
+    CASH
+    CRYPTO
+}
+
+/// Asset Entity
+/// Example: USD, BTC, ETH
+model Asset {
+    id        Int       @id @default(autoincrement())
+    name      String    @unique /// For Bitcoin, it would be Bitcoin
+    code      String    @unique /// For Bitcoin, this would be BTC
+    assetType AssetType
+}
