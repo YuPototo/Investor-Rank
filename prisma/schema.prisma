@@ -86,6 +86,8 @@ model PortfolioAsset {
     quantity    Float
     asset       Asset     @relation(fields: [assetId], references: [id])
     portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+
+    @@index([portfolioId])
 }
 
 /// Portfolio

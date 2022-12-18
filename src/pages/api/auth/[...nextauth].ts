@@ -41,8 +41,35 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
-    // ...add more providers here
   ],
+  events: {
+    async createUser(message) {
+      // create portfolio for user
+      const portfolio = await prisma.portfolio.create({
+        data: { userId: message.user.id },
+      });
+
+      // get dollar asset id
+      const dollarAsset = await prisma.asset.findUnique({
+        where: { code: "USD" },
+      });
+
+      if (!dollarAsset) {
+        throw new Error("Dollar asset not found");
+      }
+
+      const initialAmount = 100000;
+
+      // create dollar for user
+      await prisma.portfolioAsset.create({
+        data: {
+          portfolioId: portfolio.id,
+          assetId: dollarAsset.id,
+          quantity: initialAmount,
+        },
+      });
+    },
+  },
 };
 
 export default NextAuth(authOptions);
