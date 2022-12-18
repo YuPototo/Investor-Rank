@@ -32,10 +32,11 @@ CREATE TABLE "Session" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
+    "firstName" TEXT,
+    "familyName" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -58,22 +59,13 @@ CREATE TABLE "Asset" (
 );
 
 -- CreateTable
-CREATE TABLE "PortfolioAsset" (
+CREATE TABLE "UserAsset" (
     "id" SERIAL NOT NULL,
     "assetId" INTEGER NOT NULL,
-    "portfolioId" INTEGER NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
-
-    CONSTRAINT "PortfolioAsset_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Portfolio" (
-    "id" SERIAL NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT,
 
-    CONSTRAINT "Portfolio_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "UserAsset_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -98,7 +90,7 @@ CREATE UNIQUE INDEX "Asset_name_key" ON "Asset"("name");
 CREATE UNIQUE INDEX "Asset_code_key" ON "Asset"("code");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Portfolio_userId_key" ON "Portfolio"("userId");
+CREATE INDEX "UserAsset_userId_idx" ON "UserAsset"("userId");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -107,10 +99,7 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PortfolioAsset" ADD CONSTRAINT "PortfolioAsset_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PortfolioAsset" ADD CONSTRAINT "PortfolioAsset_portfolioId_fkey" FOREIGN KEY ("portfolioId") REFERENCES "Portfolio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Portfolio" ADD CONSTRAINT "Portfolio_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

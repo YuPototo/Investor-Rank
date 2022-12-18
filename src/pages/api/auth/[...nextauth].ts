@@ -44,11 +44,6 @@ export const authOptions: NextAuthOptions = {
   ],
   events: {
     async createUser(message) {
-      // create portfolio for user
-      const portfolio = await prisma.portfolio.create({
-        data: { userId: message.user.id },
-      });
-
       // get dollar asset id
       const dollarAsset = await prisma.asset.findUnique({
         where: { code: "USD" },
@@ -61,9 +56,9 @@ export const authOptions: NextAuthOptions = {
       const initialAmount = 100000;
 
       // create dollar for user
-      await prisma.portfolioAsset.create({
+      await prisma.userAsset.create({
         data: {
-          portfolioId: portfolio.id,
+          userId: message.user.id,
           assetId: dollarAsset.id,
           quantity: initialAmount,
         },

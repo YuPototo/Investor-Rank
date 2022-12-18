@@ -37,15 +37,15 @@ model Session {
 
 // https://next-auth.js.org/adapters/models#user
 model User {
-    id            String     @id @default(cuid())
-    email         String?    @unique
+    id            String      @id @default(cuid())
+    email         String?     @unique
     emailVerified DateTime?
     image         String?
     firstName     String?
     familyName    String?
     accounts      Account[]
     sessions      Session[]
-    Portfolio     Portfolio?
+    UserAsset     UserAsset[]
 }
 
 // https://next-auth.js.org/adapters/models#verification-token
@@ -70,32 +70,23 @@ enum AssetType {
 /// Asset Entity
 /// Example: USD, BTC, ETH
 model Asset {
-    id             Int              @id @default(autoincrement())
-    name           String           @unique /// For Bitcoin, it would be Bitcoin
-    code           String           @unique /// For Bitcoin, this would be BTC
+    id             Int         @id @default(autoincrement())
+    name           String      @unique /// For Bitcoin, it would be Bitcoin
+    code           String      @unique /// For Bitcoin, this would be BTC
     assetType      AssetType
-    PortfolioAsset PortfolioAsset[]
+    PortfolioAsset UserAsset[]
 }
 
-/// PortfolioAsset
+/// UserAsset
 /// If a user has 5k Cash, 1 BTC and 1000 Apple Stock, then there would be 3 PortfolioAsset records
-model PortfolioAsset {
-    id          Int       @id @default(autoincrement())
-    assetId     Int
-    portfolioId Int
-    quantity    Float
-    asset       Asset     @relation(fields: [assetId], references: [id])
-    portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+model UserAsset {
+    id       Int     @id @default(autoincrement())
+    assetId  Int
+    quantity Float
+    userId   String?
 
-    @@index([portfolioId])
-}
+    asset Asset @relation(fields: [assetId], references: [id])
+    User  User? @relation(fields: [userId], references: [id])
 
-/// Portfolio
-/// A portfolio is a collection of assets owned by a user
-model Portfolio {
-    id        Int              @id @default(autoincrement())
-    assets    PortfolioAsset[]
-    updatedAt DateTime         @updatedAt
-    userId    String?          @unique
-    User      User?            @relation(fields: [userId], references: [id])
+    @@index([userId])
 }
