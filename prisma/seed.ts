@@ -3,7 +3,7 @@ import { PrismaClient, AssetType } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.asset.createMany({
+  await prisma.assetEntity.createMany({
     data: [
       {
         name: "US Dollar",

@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       // get dollar asset id
-      const dollarAsset = await prisma.asset.findUnique({
+      const dollarAsset = await prisma.assetEntity.findUnique({
         where: { code: "USD" },
       });
 
