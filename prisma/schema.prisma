@@ -75,6 +75,7 @@ model AssetEntity {
     symbol         String      @unique /// For Bitcoin, this would be BTC
     assetType      AssetType
     PortfolioAsset UserAsset[]
+    Price          Price[]
 }
 
 /// UserAsset
@@ -89,4 +90,17 @@ model UserAsset {
     User        User?       @relation(fields: [userId], references: [id])
 
     @@index([userId])
+}
+
+/// Price
+/// This is the price of an asset at a given time
+model Price {
+    id            Int      @id @default(autoincrement())
+    assetEntityId Int
+    price         Float
+    timestamp     DateTime /// this should be the datetime when the scheduler was run
+
+    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
+
+    @@index([assetEntityId, timestamp])
 }

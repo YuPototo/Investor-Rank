@@ -23,9 +23,9 @@ const Portfolio: React.FC = () => {
           {userAssets?.map((asset) => (
             <tr key={asset.id}>
               <td className="text-center">{asset.symbol}</td>
-              <td className="text-center">todo</td>
+              <td className="text-center">{asset.value}</td>
               <td className="text-center">{asset.quantity}</td>
-              <td className="text-center">todo</td>
+              <td className="text-center">{asset.price}</td>
             </tr>
           ))}
         </tbody>
