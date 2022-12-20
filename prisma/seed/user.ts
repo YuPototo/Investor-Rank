@@ -1,11 +1,21 @@
-const user = {
-  id: "clbvp8fu400009k5j6y09bt7e",
-  email: "sirius.qinyu@gmail.com",
-  emailVerified: null,
-  image: "https://cdn.discordapp.com/embed/avatars/0.png",
-  firstName: null,
-  familyName: null,
-};
+const users = [
+  {
+    id: "clbvp8fu400009k5j6y09bt7e",
+    email: "sirius.qinyu@gmail.com",
+    emailVerified: null,
+    image: "https://cdn.discordapp.com/embed/avatars/0.png",
+    firstName: "Yu",
+    familyName: "Qin",
+  },
+  {
+    id: "clbvp8fu400009k5j6y09bt73",
+    email: "test@test.com",
+    emailVerified: null,
+    image: "https://cdn.discordapp.com/embed/avatars/0.png",
+    firstName: "Fake",
+    familyName: "Two",
+  },
+];
 
 const account = {
   userId: "clbvp8fu400009k5j6y09bt7e",
@@ -28,7 +38,7 @@ const session = {
 };
 
 const data = {
-  user,
+  users,
   session,
   account,
 };

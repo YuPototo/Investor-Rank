@@ -47,6 +47,7 @@ model User {
     sessions      Session[]
     UserAsset     UserAsset[]
     Transaction   Transaction[]
+    Rank          Rank[]
 }
 
 // https://next-auth.js.org/adapters/models#verification-token
@@ -142,4 +143,12 @@ model Parameter {
     key   String        @unique
     value String
     type  ParameterType /// This is the type of the value. It can be string, number, boolean etc.
+}
+
+model Rank {
+    rank   Int    @id @default(autoincrement())
+    userId String
+    roi    Float
+
+    User User @relation(fields: [userId], references: [id])
 }

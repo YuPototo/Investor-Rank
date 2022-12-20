@@ -3,6 +3,7 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Portfolio from "../components/UserPortfolio";
 import BuyAsset from "../components/BuyAsset";
+import Leaderboard from "../components/Leaderboard";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -20,6 +21,8 @@ const Home: NextPage = () => {
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           {sessionData === null ? <SignInCallOut /> : <Portfolio />}
         </div>
+
+        <Leaderboard />
 
         <BuyAsset />
       </main>

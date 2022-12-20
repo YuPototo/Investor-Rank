@@ -23,6 +23,7 @@ export const userAssetRouter = router({
       select: {
         id: true,
         quantity: true,
+        assetEntityId: true,
         assetEntity: {
           select: {
             symbol: true,
@@ -52,7 +53,7 @@ export const userAssetRouter = router({
       userAssets.map(async (userAsset) => {
         const price = await ctx.prisma.price.findFirst({
           where: {
-            assetEntityId: userAsset.id,
+            assetEntityId: userAsset.assetEntityId,
           },
           orderBy: {
             timestamp: "desc",
