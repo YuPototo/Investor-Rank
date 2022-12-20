@@ -199,7 +199,6 @@ export const transactionRouter = router({
       }
 
       // update asset sold
-
       // delete record if quantity is 0
       if (userAsset.quantity === input.quantity) {
         await ctx.prisma.userAsset.delete({

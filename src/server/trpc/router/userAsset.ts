@@ -80,7 +80,7 @@ export const userAssetRouter = router({
       })
     );
 
-    const roi = Math.round((totalValue / initialDollar) * 1000) / 1000;
+    const roi = Math.round((totalValue / initialDollar) * 1000) / 1000 - 1;
 
     const output: UserAssetOutput = { assets, roi };
     return output;
