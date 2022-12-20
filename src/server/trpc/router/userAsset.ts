@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 
 interface UserAssetOutput {
@@ -38,7 +39,10 @@ export const userAssetRouter = router({
         });
 
         if (!price) {
-          throw new Error(`Price for asset ${userAsset} not found`);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `Price for asset ${userAsset} not found`,
+          });
         }
 
         const userAssetOutput: UserAssetOutput = {

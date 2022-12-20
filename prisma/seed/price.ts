@@ -17,13 +17,13 @@ const btcPrices = [
   {
     id: 2,
     assetEntityId: assetEntityId.BTC,
-    price: 50000,
+    price: 10000,
     timestamp: new Date("2021-01-01"),
   },
   {
     id: 3,
     assetEntityId: assetEntityId.BTC,
-    price: 50000,
+    price: 20000,
     timestamp: new Date(),
   },
 ];

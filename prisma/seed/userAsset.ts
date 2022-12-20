@@ -3,7 +3,7 @@ const userAssets = [
   {
     assetEntityId: 1,
     userId: "clbvp8fu400009k5j6y09bt7e",
-    quantity: 100000,
+    quantity: 1000000,
   },
   {
     assetEntityId: 2, // btc

@@ -10,7 +10,7 @@ export const userRouter = router({
         familyName: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const user = (await ctx.prisma.user.findUnique({
         where: { id: ctx.session.user.id },
       })) as User;

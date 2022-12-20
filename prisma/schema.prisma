@@ -37,8 +37,8 @@ model Session {
 
 // https://next-auth.js.org/adapters/models#user
 model User {
-    id            String      @id @default(cuid())
-    email         String?     @unique
+    id            String        @id @default(cuid())
+    email         String?       @unique
     emailVerified DateTime?
     image         String?
     firstName     String?
@@ -46,6 +46,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     UserAsset     UserAsset[]
+    Transaction   Transaction[]
 }
 
 // https://next-auth.js.org/adapters/models#verification-token
@@ -70,12 +71,13 @@ enum AssetType {
 /// Asset Entity
 /// Example: USD, BTC, ETH
 model AssetEntity {
-    id             Int         @id @default(autoincrement())
-    name           String      @unique /// For Bitcoin, it would be Bitcoin
-    symbol         String      @unique /// For Bitcoin, this would be BTC
+    id             Int           @id @default(autoincrement())
+    name           String        @unique /// For Bitcoin, it would be Bitcoin
+    symbol         String        @unique /// For Bitcoin, this would be BTC
     assetType      AssetType
     PortfolioAsset UserAsset[]
     Price          Price[]
+    Transaction    Transaction[]
 }
 
 /// UserAsset
@@ -89,7 +91,7 @@ model UserAsset {
     assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
     User        User?       @relation(fields: [userId], references: [id])
 
-    @@index([userId])
+    @@unique([userId, assetEntityId])
 }
 
 /// Price
@@ -100,7 +102,30 @@ model Price {
     price         Float
     timestamp     DateTime /// this should be the datetime when the scheduler was run
 
-    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
+    assetEntity AssetEntity   @relation(fields: [assetEntityId], references: [id])
+    Transaction Transaction[]
 
     @@index([assetEntityId, timestamp])
+}
+
+/// Transaction
+enum TransactionType {
+    BUY
+    SELL
+}
+
+model Transaction {
+    id            Int             @id @default(autoincrement())
+    assetEntityId Int
+    quantity      Float
+    priceId       Int
+    timestamp     DateTime /// this should be the datetime when the scheduler was run
+    type          TransactionType /// BUY or SELL
+    userId        String?
+
+    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
+    price       Price       @relation(fields: [priceId], references: [id])
+    User        User?       @relation(fields: [userId], references: [id])
+
+    @@index([userId])
 }
