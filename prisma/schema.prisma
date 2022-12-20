@@ -72,7 +72,7 @@ enum AssetType {
 model AssetEntity {
     id             Int         @id @default(autoincrement())
     name           String      @unique /// For Bitcoin, it would be Bitcoin
-    code           String      @unique /// For Bitcoin, this would be BTC
+    symbol         String      @unique /// For Bitcoin, this would be BTC
     assetType      AssetType
     PortfolioAsset UserAsset[]
 }
@@ -80,13 +80,13 @@ model AssetEntity {
 /// UserAsset
 /// If a user has 5k Cash, 1 BTC and 1000 Apple Stock, then there would be 3 PortfolioAsset records
 model UserAsset {
-    id       Int     @id @default(autoincrement())
-    assetId  Int
-    quantity Float
-    userId   String?
+    id            Int     @id @default(autoincrement())
+    assetEntityId Int
+    quantity      Float
+    userId        String?
 
-    asset AssetEntity @relation(fields: [assetId], references: [id])
-    User  User?       @relation(fields: [userId], references: [id])
+    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
+    User        User?       @relation(fields: [userId], references: [id])
 
     @@index([userId])
 }

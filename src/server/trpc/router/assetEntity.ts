@@ -1,7 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 
-export const assetRouter = router({
+export const assetEntityRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.asset.findMany();
+    return ctx.prisma.assetEntity.findMany();
   }),
 });

@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
     async createUser(message) {
       // get dollar asset id
       const dollarAsset = await prisma.assetEntity.findUnique({
-        where: { code: "USD" },
+        where: { symbol: "USD" },
       });
 
       if (!dollarAsset) {
@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
       await prisma.userAsset.create({
         data: {
           userId: message.user.id,
-          assetId: dollarAsset.id,
+          assetEntityId: dollarAsset.id,
           quantity: initialAmount,
         },
       });

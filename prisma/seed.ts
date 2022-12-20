@@ -7,17 +7,17 @@ async function main() {
     data: [
       {
         name: "US Dollar",
-        code: "USD",
+        symbol: "USD",
         assetType: AssetType.CASH,
       },
       {
         name: "Bitcoin",
-        code: "BTC",
+        symbol: "BTC",
         assetType: AssetType.CRYPTO,
       },
       {
         name: "Ethereum",
-        code: "ETH",
+        symbol: "ETH",
         assetType: AssetType.CRYPTO,
       },
     ],

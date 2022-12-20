@@ -1,12 +1,14 @@
 import { router } from "../trpc";
 import { authRouter } from "./auth";
-import { assetRouter } from "./asset";
+import { assetEntityRouter } from "./assetEntity";
 import { userRouter } from "./user";
+import { userAssetRouter } from "./userAsset";
 
 export const appRouter = router({
-  asset: assetRouter,
   auth: authRouter,
   user: userRouter,
+  assetEntity: assetEntityRouter,
+  userAsset: userAssetRouter,
 });
 
 // export type definition of API

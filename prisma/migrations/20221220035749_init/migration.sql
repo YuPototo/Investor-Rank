@@ -52,7 +52,7 @@ CREATE TABLE "VerificationToken" (
 CREATE TABLE "AssetEntity" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
+    "symbol" TEXT NOT NULL,
     "assetType" "AssetType" NOT NULL,
 
     CONSTRAINT "AssetEntity_pkey" PRIMARY KEY ("id")
@@ -61,7 +61,7 @@ CREATE TABLE "AssetEntity" (
 -- CreateTable
 CREATE TABLE "UserAsset" (
     "id" SERIAL NOT NULL,
-    "assetId" INTEGER NOT NULL,
+    "assetEntityId" INTEGER NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
     "userId" TEXT,
 
@@ -87,7 +87,7 @@ CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationTok
 CREATE UNIQUE INDEX "AssetEntity_name_key" ON "AssetEntity"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AssetEntity_code_key" ON "AssetEntity"("code");
+CREATE UNIQUE INDEX "AssetEntity_symbol_key" ON "AssetEntity"("symbol");
 
 -- CreateIndex
 CREATE INDEX "UserAsset_userId_idx" ON "UserAsset"("userId");
@@ -99,7 +99,7 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "AssetEntity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_assetEntityId_fkey" FOREIGN KEY ("assetEntityId") REFERENCES "AssetEntity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
