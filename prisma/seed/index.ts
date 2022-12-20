@@ -3,6 +3,7 @@ import assetEntityData from "./assetEntity";
 import userData from "./user";
 import userAssets from "./userAsset";
 import prices from "./price";
+import parameter from "./parameter";
 
 const prisma = new PrismaClient();
 
@@ -13,6 +14,7 @@ async function main() {
   await prisma.session.create({ data: userData.session });
   await prisma.userAsset.createMany({ data: userAssets });
   await prisma.price.createMany({ data: prices });
+  await prisma.parameter.createMany({ data: parameter });
 }
 
 main()

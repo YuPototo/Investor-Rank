@@ -4,6 +4,9 @@ CREATE TYPE "AssetType" AS ENUM ('CASH', 'CRYPTO');
 -- CreateEnum
 CREATE TYPE "TransactionType" AS ENUM ('BUY', 'SELL');
 
+-- CreateEnum
+CREATE TYPE "ParameterType" AS ENUM ('STRING', 'NUMBER', 'BOOLEAN');
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
@@ -94,6 +97,16 @@ CREATE TABLE "Transaction" (
     CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Parameter" (
+    "id" SERIAL NOT NULL,
+    "key" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "type" "ParameterType" NOT NULL,
+
+    CONSTRAINT "Parameter_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
@@ -123,6 +136,9 @@ CREATE INDEX "Price_assetEntityId_timestamp_idx" ON "Price"("assetEntityId", "ti
 
 -- CreateIndex
 CREATE INDEX "Transaction_userId_idx" ON "Transaction"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Parameter_key_key" ON "Parameter"("key");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

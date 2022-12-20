@@ -1,12 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../trpc";
 
-interface UserAssetOutput {
+interface AssetItem {
   id: number;
   quantity: number;
   symbol: string;
   price: number;
   value: number;
+}
+
+interface UserAssetOutput {
+  assets: AssetItem[];
+  roi: number;
 }
 
 export const userAssetRouter = router({
@@ -26,8 +31,24 @@ export const userAssetRouter = router({
       },
     });
 
-    // get price and value
-    const userAssetsOutputs = await Promise.all(
+    // get initial dollar amount
+    // get initial dollar param
+    const initialDollarParam = await ctx.prisma.parameter.findFirst({
+      where: {
+        key: "initialDollar",
+      },
+    });
+
+    if (!initialDollarParam) {
+      throw new Error("initialDollar not found");
+    }
+
+    const initialDollar = Number(initialDollarParam.value);
+
+    // get price and value, and roi
+    let totalValue = 0;
+
+    const assets = await Promise.all(
       userAssets.map(async (userAsset) => {
         const price = await ctx.prisma.price.findFirst({
           where: {
@@ -45,7 +66,10 @@ export const userAssetRouter = router({
           });
         }
 
-        const userAssetOutput: UserAssetOutput = {
+        // update total value
+        totalValue += price.price * userAsset.quantity;
+
+        const userAssetOutput: AssetItem = {
           id: userAsset.id,
           quantity: userAsset.quantity,
           symbol: userAsset.assetEntity.symbol,
@@ -56,6 +80,9 @@ export const userAssetRouter = router({
       })
     );
 
-    return userAssetsOutputs;
+    const roi = Math.round((totalValue / initialDollar) * 1000) / 1000;
+
+    const output: UserAssetOutput = { assets, roi };
+    return output;
   }),
 });

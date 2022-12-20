@@ -45,22 +45,38 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       // get dollar asset id
-      const dollarAsset = await prisma.assetEntity.findUnique({
-        where: { symbol: "USD" },
+      // todo: abstract param fetching and parsing
+      const dollarAssetParam = await prisma.parameter.findFirst({
+        where: {
+          key: "dollarAssetId",
+        },
       });
 
-      if (!dollarAsset) {
-        throw new Error("Dollar asset not found");
+      if (!dollarAssetParam) {
+        throw new Error("dollarAssetId not found");
       }
 
-      const initialAmount = 100000;
+      const initialDollarId = Number(dollarAssetParam.value);
+
+      // get initial dollar param
+      const initialDollarParam = await prisma.parameter.findFirst({
+        where: {
+          key: "initialDollar",
+        },
+      });
+
+      if (!initialDollarParam) {
+        throw new Error("initialDollar not found");
+      }
+
+      const initialDollar = Number(initialDollarParam.value);
 
       // create dollar for user
       await prisma.userAsset.create({
         data: {
           userId: message.user.id,
-          assetEntityId: dollarAsset.id,
-          quantity: initialAmount,
+          assetEntityId: initialDollarId,
+          quantity: initialDollar,
         },
       });
     },

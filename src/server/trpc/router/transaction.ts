@@ -2,8 +2,6 @@ import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-const usdAssetId = 1;
-
 export const transactionRouter = router({
   // todo: don't allow buy usd
   buy: protectedProcedure
@@ -15,6 +13,19 @@ export const transactionRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // get dollar asset id
+      const dollarAssetParam = await ctx.prisma.parameter.findFirst({
+        where: {
+          key: "dollarAssetId",
+        },
+      });
+
+      if (!dollarAssetParam) {
+        throw new Error("dollarAssetId not found");
+      }
+
+      const dollarAssetId = Number(dollarAssetParam.value);
 
       // get price
       const price = await ctx.prisma.price.findFirst({
@@ -38,7 +49,7 @@ export const transactionRouter = router({
         where: {
           userId_assetEntityId: {
             userId,
-            assetEntityId: usdAssetId,
+            assetEntityId: dollarAssetId,
           },
         },
       });
@@ -61,12 +72,7 @@ export const transactionRouter = router({
       }
 
       // update asset bought
-      await ctx.prisma.userAsset.update({
-        data: {
-          quantity: {
-            increment: input.quantity,
-          },
-        },
+      const userAsset = await ctx.prisma.userAsset.findUnique({
         where: {
           userId_assetEntityId: {
             userId,
@@ -74,6 +80,30 @@ export const transactionRouter = router({
           },
         },
       });
+
+      if (!userAsset) {
+        await ctx.prisma.userAsset.create({
+          data: {
+            userId,
+            assetEntityId: input.assetEntityId,
+            quantity: input.quantity,
+          },
+        });
+      } else {
+        await ctx.prisma.userAsset.update({
+          data: {
+            quantity: {
+              increment: input.quantity,
+            },
+          },
+          where: {
+            userId_assetEntityId: {
+              userId,
+              assetEntityId: input.assetEntityId,
+            },
+          },
+        });
+      }
 
       // update user dollar
       await ctx.prisma.userAsset.update({
@@ -85,7 +115,7 @@ export const transactionRouter = router({
         where: {
           userId_assetEntityId: {
             userId,
-            assetEntityId: usdAssetId,
+            assetEntityId: dollarAssetId,
           },
         },
       });
@@ -113,6 +143,19 @@ export const transactionRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // get dollar asset id
+      const dollarAssetParam = await ctx.prisma.parameter.findFirst({
+        where: {
+          key: "dollarAssetId",
+        },
+      });
+
+      if (!dollarAssetParam) {
+        throw new Error("dollarAssetId not found");
+      }
+
+      const dollarAssetId = Number(dollarAssetParam.value);
 
       // get price
       const price = await ctx.prisma.price.findFirst({
@@ -156,19 +199,32 @@ export const transactionRouter = router({
       }
 
       // update asset sold
-      await ctx.prisma.userAsset.update({
-        data: {
-          quantity: {
-            decrement: input.quantity,
+
+      // delete record if quantity is 0
+      if (userAsset.quantity === input.quantity) {
+        await ctx.prisma.userAsset.delete({
+          where: {
+            userId_assetEntityId: {
+              userId,
+              assetEntityId: input.assetEntityId,
+            },
           },
-        },
-        where: {
-          userId_assetEntityId: {
-            userId,
-            assetEntityId: input.assetEntityId,
+        });
+      } else {
+        await ctx.prisma.userAsset.update({
+          data: {
+            quantity: {
+              decrement: input.quantity,
+            },
           },
-        },
-      });
+          where: {
+            userId_assetEntityId: {
+              userId,
+              assetEntityId: input.assetEntityId,
+            },
+          },
+        });
+      }
 
       // update user dollar
       await ctx.prisma.userAsset.update({
@@ -180,7 +236,7 @@ export const transactionRouter = router({
         where: {
           userId_assetEntityId: {
             userId,
-            assetEntityId: usdAssetId,
+            assetEntityId: dollarAssetId,
           },
         },
       });
