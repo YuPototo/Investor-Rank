@@ -12,11 +12,11 @@ const Portfolio: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-bold text-center text-lg">Portfolio</h2>
+      <h2 className="mb-4 text-center text-2xl font-bold">Portfolio</h2>
 
-      <div>ROI: {roi}</div>
+      <div className="mb-3 text-center">ROI: {roi}</div>
 
-      <table>
+      <table className="mx-auto">
         <tbody>
           <tr>
             <th className="w-24">Symbol</th>

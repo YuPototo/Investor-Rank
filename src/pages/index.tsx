@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Portfolio from "../components/UserPortfolio";
-import BuyAsset from "../components/BuyAsset";
 import Leaderboard from "../components/Leaderboard";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -16,15 +16,25 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-gradient-to-b ">
-        <NavBar />
-
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          {sessionData === null ? <SignInCallOut /> : <Portfolio />}
+        <div className="container mx-auto flex w-full justify-center gap-12 px-4 py-16">
+          <div className="w-1/2 ">
+            {sessionData === null ? (
+              <SignInCallOut />
+            ) : (
+              <>
+                <Portfolio />
+                <div className="mt-10 text-center">
+                  <Link className="btn-primary" href="/trade">
+                    Go to trade
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="w-1/2">
+            <Leaderboard />
+          </div>
         </div>
-
-        <Leaderboard />
-
-        <BuyAsset />
       </main>
     </>
   );
@@ -37,31 +47,19 @@ export default Home;
  */
 const SignInCallOut: React.FC = () => {
   return (
-    <>
-      <h1 className="text-3xl font-bold tracking-tight ">Investor Rank</h1>
-      <div>
-        <button className="btn-primary" onClick={() => signIn()}>
-          {"Sign in"}
-        </button>
+    <div className="flex flex-col items-center">
+      <h1 className="mb-5 text-3xl font-bold tracking-tight">Investor Rank</h1>
+      <div className="mb-6 flex flex-col gap-3 text-center">
+        <div>Trade with fake money</div>
+        <div>Under your real name</div>
+        <div>With real world asset price</div>
+        <div>Your trading history is public</div>
+        <div>Your name is under risk</div>
+        <div>Are you a good trader?</div>
       </div>
-    </>
-  );
-};
-
-/**
- * NavBar
- */
-const NavBar: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  return (
-    <div className="flex h-16 w-full items-center bg-gray-300">
-      <div className="ml-auto mr-5">
-        <button
-          className="btn-primary"
-          onClick={sessionData ? () => signOut() : () => signIn()}
-        >
-          {sessionData ? "Sign out" : "Sign in"}
+      <div>
+        <button className="btn-primary uppercase" onClick={() => signIn()}>
+          Join
         </button>
       </div>
     </div>

@@ -5,8 +5,8 @@ const Leaderboard: React.FC = () => {
 
   return (
     <div>
-      <h2>Leaderboard</h2>
-      <table>
+      <h2 className="mb-6 text-center text-2xl font-bold">Leaderboard</h2>
+      <table className="mx-auto">
         <tbody>
           <tr>
             <th className="w-24">Rank</th>
