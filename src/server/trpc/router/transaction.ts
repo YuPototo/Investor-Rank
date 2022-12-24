@@ -1,6 +1,7 @@
 import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import getDollarId from "../../utils/getDollarId";
 
 export const transactionRouter = router({
   // todo: don't allow buy usd
@@ -15,17 +16,7 @@ export const transactionRouter = router({
       const userId = ctx.session.user.id;
 
       // get dollar asset id
-      const dollarAssetParam = await ctx.prisma.parameter.findFirst({
-        where: {
-          key: "dollarAssetId",
-        },
-      });
-
-      if (!dollarAssetParam) {
-        throw new Error("dollarAssetId not found");
-      }
-
-      const dollarAssetId = Number(dollarAssetParam.value);
+      const dollarAssetId = await getDollarId(ctx.prisma);
 
       // get price
       const price = await ctx.prisma.price.findFirst({
@@ -145,17 +136,7 @@ export const transactionRouter = router({
       const userId = ctx.session.user.id;
 
       // get dollar asset id
-      const dollarAssetParam = await ctx.prisma.parameter.findFirst({
-        where: {
-          key: "dollarAssetId",
-        },
-      });
-
-      if (!dollarAssetParam) {
-        throw new Error("dollarAssetId not found");
-      }
-
-      const dollarAssetId = Number(dollarAssetParam.value);
+      const dollarAssetId = await getDollarId(ctx.prisma);
 
       // get price
       const price = await ctx.prisma.price.findFirst({

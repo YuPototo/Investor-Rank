@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       </Head>
       <main className="min-h-screen bg-gradient-to-b ">
         <div className="container mx-auto flex w-full justify-center gap-12 px-4 py-16">
-          <div className="w-1/2 ">
+          <div className="w-1/2">
             {sessionData === null ? (
               <SignInCallOut />
             ) : (

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import getDollarId from "../../utils/getDollarId";
 import { router, protectedProcedure } from "../trpc";
 
 interface AssetItem {
@@ -32,7 +33,6 @@ export const userAssetRouter = router({
       },
     });
 
-    // get initial dollar amount
     // get initial dollar param
     const initialDollarParam = await ctx.prisma.parameter.findFirst({
       where: {
@@ -85,5 +85,21 @@ export const userAssetRouter = router({
 
     const output: UserAssetOutput = { assets, roi };
     return output;
+  }),
+  getBalance: protectedProcedure.query(async ({ ctx }) => {
+    const dollarId = await getDollarId(ctx.prisma);
+
+    const userAsset = await ctx.prisma.userAsset.findFirst({
+      where: {
+        userId: ctx.session.user.id,
+        assetEntityId: dollarId,
+      },
+    });
+
+    if (!userAsset) {
+      throw new Error("Dollar asset not found");
+    }
+
+    return { balance: userAsset.quantity };
   }),
 });

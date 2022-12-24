@@ -75,6 +75,7 @@ model AssetEntity {
     id             Int           @id @default(autoincrement())
     name           String        @unique /// For Bitcoin, it would be Bitcoin
     symbol         String        @unique /// For Bitcoin, this would be BTC
+    buyable        Boolean       @default(true) /// USD is not buyable
     assetType      AssetType
     PortfolioAsset UserAsset[]
     Price          Price[]
