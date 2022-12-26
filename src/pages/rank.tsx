@@ -1,7 +1,12 @@
 import { type NextPage } from "next";
+import Leaderboard from "../components/Leaderboard";
 
 const Rank: NextPage = () => {
-  return <div>Rank</div>;
+  return (
+    <div>
+      <Leaderboard />
+    </div>
+  );
 };
 
 export default Rank;

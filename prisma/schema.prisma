@@ -148,7 +148,7 @@ model Parameter {
 
 model Rank {
     rank   Int    @id @default(autoincrement())
-    userId String
+    userId String @unique
     roi    Float
 
     User User @relation(fields: [userId], references: [id])

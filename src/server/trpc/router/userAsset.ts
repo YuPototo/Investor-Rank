@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import getDollarId from "../../utils/getDollarId";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
+import getInitialDollar from "../../utils/getInitialDollar";
 
 interface AssetItem {
   id: number;
@@ -35,17 +36,7 @@ export const userAssetRouter = router({
     });
 
     // get initial dollar param
-    const initialDollarParam = await ctx.prisma.parameter.findFirst({
-      where: {
-        key: "initialDollar",
-      },
-    });
-
-    if (!initialDollarParam) {
-      throw new Error("initialDollar not found");
-    }
-
-    const initialDollar = Number(initialDollarParam.value);
+    const initialDollar = await getInitialDollar(ctx.prisma);
 
     // get price and value, and roi
     let totalValue = 0;
@@ -120,5 +111,59 @@ export const userAssetRouter = router({
       }
 
       return userAsset;
+    }),
+  getRoiByUserId: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const userId = input;
+
+      const userAssets = await ctx.prisma.userAsset.findMany({
+        where: {
+          userId,
+        },
+        select: {
+          id: true,
+          quantity: true,
+          assetEntityId: true,
+          assetEntity: {
+            select: {
+              symbol: true,
+            },
+          },
+        },
+      });
+
+      // get initial dollar param
+      const initialDollar = await getInitialDollar(ctx.prisma);
+
+      // get price and value, and roi
+      let totalValue = 0;
+
+      await Promise.all(
+        userAssets.map(async (userAsset) => {
+          const price = await ctx.prisma.price.findFirst({
+            where: {
+              assetEntityId: userAsset.assetEntityId,
+            },
+            orderBy: {
+              timestamp: "desc",
+            },
+          });
+
+          if (!price) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: `Price for asset ${userAsset} not found`,
+            });
+          }
+
+          // update total value
+          totalValue += price.price * userAsset.quantity;
+        })
+      );
+
+      const roi = Math.round((totalValue / initialDollar) * 1000) / 1000 - 1;
+
+      return roi;
     }),
 });
