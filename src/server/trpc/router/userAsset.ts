@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import getDollarId from "../../utils/getDollarId";
 import { router, protectedProcedure } from "../trpc";
+import { z } from "zod";
 
 interface AssetItem {
   id: number;
@@ -102,4 +103,22 @@ export const userAssetRouter = router({
 
     return { balance: userAsset.quantity };
   }),
+  getOneById: protectedProcedure
+    .input(z.number())
+    .query(async ({ ctx, input }) => {
+      const userAsset = await ctx.prisma.userAsset.findUnique({
+        where: {
+          userId_assetEntityId: {
+            userId: ctx.session.user.id,
+            assetEntityId: input,
+          },
+        },
+      });
+
+      if (!userAsset) {
+        throw new Error("User asset not found");
+      }
+
+      return userAsset;
+    }),
 });

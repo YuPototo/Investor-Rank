@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import UserAssets from "../components/UserAssets";
 import { trpc } from "../utils/trpc";
 
@@ -38,7 +39,9 @@ const Trade: NextPage = () => {
             <div className="my-2 flex items-center gap-4" key={asset.id}>
               <div>{asset.symbol}</div>
               <div>{asset.price}</div>
-              <button className="btn-primary">Buy</button>
+              <Link href={`/buy/${asset.symbol}`} className="btn-primary">
+                Buy
+              </Link>
             </div>
           ))}
         </div>

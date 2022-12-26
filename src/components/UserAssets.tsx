@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { trpc } from "../utils/trpc";
 
 type Props = {
@@ -33,7 +34,9 @@ const UserAssets: React.FC<Props> = ({ showUsd }) => {
             <td className="text-center">{asset.quantity}</td>
             <td className="text-center">{asset.price}</td>
             <td>
-              <button className="btn-primary">Sell</button>
+              <Link href={`/sell/${asset.symbol}`} className="btn-primary">
+                Sell
+              </Link>
             </td>
           </tr>
         ))}

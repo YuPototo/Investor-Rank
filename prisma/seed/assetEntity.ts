@@ -6,6 +6,7 @@ const data = [
     name: "US Dollar",
     symbol: "USD",
     assetType: AssetType.CASH,
+    buyable: false,
   },
   {
     id: 2,

@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import getDollarId from "../../utils/getDollarId";
@@ -235,4 +235,44 @@ export const transactionRouter = router({
 
       return { transaction };
     }),
+  getOne: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    const transactionId = input;
+
+    const transaction = await ctx.prisma.transaction.findUnique({
+      where: {
+        id: transactionId,
+      },
+      select: {
+        id: true,
+        type: true,
+        quantity: true,
+        timestamp: true,
+        assetEntity: {
+          select: {
+            symbol: true,
+          },
+        },
+        price: {
+          select: {
+            price: true,
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      throw new TRPCError({
+        code: "BAD_REQUEST", // ? should I use different code?
+        message: `transaction ${transactionId} not found`,
+      });
+    }
+
+    const output = {
+      ...transaction,
+      assetEntity: transaction.assetEntity.symbol,
+      price: transaction.price.price,
+    };
+
+    return { transaction: output };
+  }),
 });

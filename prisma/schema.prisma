@@ -117,7 +117,7 @@ enum TransactionType {
 }
 
 model Transaction {
-    id            Int             @id @default(autoincrement())
+    id            String          @id @default(cuid())
     assetEntityId Int
     quantity      Float
     priceId       Int
