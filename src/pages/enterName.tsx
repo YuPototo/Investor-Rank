@@ -1,7 +1,12 @@
 import { type NextPage } from "next";
+import EnterNameForm from "../components/EnterNameForm";
 
 const EnterName: NextPage = () => {
-  return <div>Enter Name in this page</div>;
+  return (
+    <div>
+      <EnterNameForm />
+    </div>
+  );
 };
 
 export default EnterName;

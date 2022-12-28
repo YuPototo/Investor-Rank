@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
@@ -17,11 +18,10 @@ export const userRouter = router({
 
       // Prevent users from changing their name
       if (user.firstName && user.familyName) {
-        return {
-          error: {
-            message: "User already has a name",
-          },
-        };
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "You already have a name",
+        });
       }
 
       await ctx.prisma.user.update({
@@ -31,6 +31,7 @@ export const userRouter = router({
           familyName: input.familyName,
         },
       });
-      return { message: "Name added" };
+
+      return { firstName: input.firstName, familyName: input.familyName };
     }),
 });
