@@ -5,6 +5,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
+import getDollarId from "../../../server/utils/getDollarId.js";
+import getInitialDollar from "../../../server/utils/getInitialDollar.js";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -45,31 +47,10 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser(message) {
       // get dollar asset id
-      // todo: abstract param fetching and parsing
-      const dollarAssetParam = await prisma.parameter.findFirst({
-        where: {
-          key: "dollarAssetId",
-        },
-      });
-
-      if (!dollarAssetParam) {
-        throw new Error("dollarAssetId not found");
-      }
-
-      const initialDollarId = Number(dollarAssetParam.value);
+      const initialDollarId = await getDollarId(prisma);
 
       // get initial dollar param
-      const initialDollarParam = await prisma.parameter.findFirst({
-        where: {
-          key: "initialDollar",
-        },
-      });
-
-      if (!initialDollarParam) {
-        throw new Error("initialDollar not found");
-      }
-
-      const initialDollar = Number(initialDollarParam.value);
+      const initialDollar = await getInitialDollar(prisma);
 
       // create dollar for user
       await prisma.userAsset.create({
