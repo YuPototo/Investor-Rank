@@ -7,7 +7,7 @@ export const rankRouter = router({
       select: {
         rank: true,
         roi: true,
-        User: {
+        user: {
           select: {
             id: true,
             firstName: true,

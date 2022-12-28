@@ -37,17 +37,18 @@ model Session {
 
 // https://next-auth.js.org/adapters/models#user
 model User {
-    id            String        @id @default(cuid())
-    email         String?       @unique
-    emailVerified DateTime?
-    image         String?
-    firstName     String?
-    familyName    String?
-    accounts      Account[]
-    sessions      Session[]
-    UserAsset     UserAsset[]
-    Transaction   Transaction[]
-    Rank          Rank[]
+    id              String            @id @default(cuid())
+    email           String?           @unique
+    emailVerified   DateTime?
+    image           String?
+    firstName       String?
+    familyName      String?
+    accounts        Account[]
+    sessions        Session[]
+    userAsset       UserAsset[]
+    transaction     Transaction[]
+    rank            Rank[]
+    lastTransaction LastTransaction[]
 }
 
 // https://next-auth.js.org/adapters/models#verification-token
@@ -72,14 +73,15 @@ enum AssetType {
 /// Asset Entity
 /// Example: USD, BTC, ETH
 model AssetEntity {
-    id             Int           @id @default(autoincrement())
-    name           String        @unique /// For Bitcoin, it would be Bitcoin
-    symbol         String        @unique /// For Bitcoin, this would be BTC
-    buyable        Boolean       @default(true) /// USD is not buyable
-    assetType      AssetType
-    PortfolioAsset UserAsset[]
-    Price          Price[]
-    Transaction    Transaction[]
+    id              Int               @id @default(autoincrement())
+    name            String            @unique /// For Bitcoin, it would be Bitcoin
+    symbol          String            @unique /// For Bitcoin, this would be BTC
+    buyable         Boolean           @default(true) /// USD is not buyable
+    assetType       AssetType
+    portfolioAsset  UserAsset[]
+    price           Price[]
+    transaction     Transaction[]
+    lastTransaction LastTransaction[]
 }
 
 /// UserAsset
@@ -91,7 +93,7 @@ model UserAsset {
     userId        String?
 
     assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
-    User        User?       @relation(fields: [userId], references: [id])
+    user        User?       @relation(fields: [userId], references: [id])
 
     @@unique([userId, assetEntityId])
 }
@@ -105,7 +107,7 @@ model Price {
     timestamp     DateTime /// this should be the datetime when the scheduler was run
 
     assetEntity AssetEntity   @relation(fields: [assetEntityId], references: [id])
-    Transaction Transaction[]
+    transaction Transaction[]
 
     @@index([assetEntityId, timestamp])
 }
@@ -127,7 +129,7 @@ model Transaction {
 
     assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
     price       Price       @relation(fields: [priceId], references: [id])
-    User        User?       @relation(fields: [userId], references: [id])
+    user        User?       @relation(fields: [userId], references: [id])
 
     @@index([userId])
 }
@@ -151,5 +153,18 @@ model Rank {
     userId String @unique
     roi    Float
 
-    User User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id])
+}
+
+model LastTransaction {
+    id              Int             @id @default(autoincrement())
+    timestamp       DateTime
+    transactionType TransactionType
+    userId          String?
+    assetEntityId   Int?
+
+    user        User?        @relation(fields: [userId], references: [id])
+    assetEntity AssetEntity? @relation(fields: [assetEntityId], references: [id])
+
+    @@unique([userId, assetEntityId, transactionType])
 }

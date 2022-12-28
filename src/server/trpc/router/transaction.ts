@@ -2,6 +2,7 @@ import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import getDollarId from "../../utils/getDollarId";
+import type { PrismaClient } from "@prisma/client";
 
 export const transactionRouter = router({
   // todo: don't allow buy usd
@@ -14,6 +15,21 @@ export const transactionRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // check last transaction
+      const { isPossible } = await checkTransactionPossibiliy(
+        ctx.prisma,
+        userId,
+        input.assetEntityId,
+        "BUY"
+      );
+
+      if (!isPossible) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You can buy after 30 mins of selling",
+        });
+      }
 
       // get dollar asset id
       const dollarAssetId = await getDollarId(ctx.prisma);
@@ -53,7 +69,7 @@ export const transactionRouter = router({
       }
 
       // check if user has enough dollar
-      // todo: if user doesn't have enough money, buy the amount he can afford
+      // todo: if user doesn't have enough money, buy the amount he can afford?
       const totalCost = price.price * input.quantity;
       if (userDollar.quantity < totalCost) {
         throw new TRPCError({
@@ -123,6 +139,26 @@ export const transactionRouter = router({
         },
       });
 
+      // upsert last transaction
+      await ctx.prisma.lastTransaction.upsert({
+        where: {
+          userId_assetEntityId_transactionType: {
+            userId,
+            assetEntityId: input.assetEntityId,
+            transactionType: "BUY",
+          },
+        },
+        update: {
+          timestamp: new Date(),
+        },
+        create: {
+          userId,
+          assetEntityId: input.assetEntityId,
+          transactionType: "BUY",
+          timestamp: new Date(),
+        },
+      });
+
       return { transaction };
     }),
   sell: protectedProcedure
@@ -134,6 +170,21 @@ export const transactionRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // check last transaction
+      const { isPossible } = await checkTransactionPossibiliy(
+        ctx.prisma,
+        userId,
+        input.assetEntityId,
+        "SELL"
+      );
+
+      if (!isPossible) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You can sell after 30 mins of buying",
+        });
+      }
 
       // get dollar asset id
       const dollarAssetId = await getDollarId(ctx.prisma);
@@ -233,6 +284,26 @@ export const transactionRouter = router({
         },
       });
 
+      // upsert last transaction
+      await ctx.prisma.lastTransaction.upsert({
+        where: {
+          userId_assetEntityId_transactionType: {
+            userId,
+            assetEntityId: input.assetEntityId,
+            transactionType: "SELL",
+          },
+        },
+        update: {
+          timestamp: new Date(),
+        },
+        create: {
+          userId,
+          assetEntityId: input.assetEntityId,
+          transactionType: "SELL",
+          timestamp: new Date(),
+        },
+      });
+
       return { transaction };
     }),
   getOne: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
@@ -275,4 +346,57 @@ export const transactionRouter = router({
 
     return { transaction: output };
   }),
+  isTransactionPossible: protectedProcedure
+    .input(
+      z.object({
+        assetEntityId: z.number(),
+        transactionType: z.enum(["BUY", "SELL"]),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      const { assetEntityId, transactionType } = input;
+
+      const data = await checkTransactionPossibiliy(
+        ctx.prisma,
+        userId,
+        assetEntityId,
+        transactionType
+      );
+
+      return data;
+    }),
 });
+
+async function checkTransactionPossibiliy(
+  prisma: PrismaClient,
+  userId: string,
+  assetEntityId: number,
+  transactionType: "BUY" | "SELL"
+) {
+  const lookedUpTransactionType = transactionType === "BUY" ? "SELL" : "BUY";
+
+  const lastTransaction = await prisma.lastTransaction.findUnique({
+    where: {
+      userId_assetEntityId_transactionType: {
+        userId,
+        assetEntityId,
+        transactionType: lookedUpTransactionType,
+      },
+    },
+  });
+
+  if (!lastTransaction) {
+    return { isPossible: true };
+  } else {
+    // if less than 30 mins ago, return false
+    const isPossible =
+      lastTransaction.timestamp < new Date(Date.now() - 30 * 60 * 1000);
+    const availableInMins =
+      30 -
+      Math.floor((Date.now() - lastTransaction.timestamp.getTime()) / 60000);
+
+    return { isPossible, availableInMins };
+  }
+}

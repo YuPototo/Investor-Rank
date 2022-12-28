@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import toast from "react-hot-toast";
+import TransactionLockHint from "../../components/TransactionLockHint";
 
 const Buy: NextPage = () => {
   const [buyAmount, setBuyAmount] = useState("0.01");
@@ -11,13 +12,26 @@ const Buy: NextPage = () => {
   // get asset
   const router = useRouter();
   const { assetSymbol } = router.query;
-
   const { data: asset } = trpc.assetEntity.getBySymbol.useQuery(
     assetSymbol as string,
     {
       enabled: assetSymbol !== undefined,
     }
   );
+
+  // is transaction possible
+  const { data: transactionPossibility } =
+    trpc.transaction.isTransactionPossible.useQuery(
+      {
+        assetEntityId: asset?.id as number,
+        transactionType: "BUY",
+      },
+      {
+        enabled: asset?.id !== undefined,
+      }
+    );
+
+  const isTransactionPossible = transactionPossibility?.isPossible;
 
   // get user balance
   const { data: sessionData } = useSession();
@@ -89,6 +103,7 @@ const Buy: NextPage = () => {
       <div className="flex items-center gap-4">
         <div>Buy Amount</div>
         <input
+          disabled={!isTransactionPossible}
           className="rounded border border-blue-300 py-1 px-2"
           type="number"
           min="0.01"
@@ -107,7 +122,19 @@ const Buy: NextPage = () => {
         here. Here is why. (todo: link to a notion page)
       </div>
 
-      <button className="btn-primary" onClick={handleBuy}>
+      {isTransactionPossible || (
+        <TransactionLockHint
+          transactionType="BUY"
+          assetSymbol={assetSymbol as string}
+          availableInMins={transactionPossibility?.availableInMins as number}
+        />
+      )}
+
+      <button
+        disabled={!isTransactionPossible}
+        className="btn-primary"
+        onClick={handleBuy}
+      >
         Confirm
       </button>
     </div>

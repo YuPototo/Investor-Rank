@@ -17,7 +17,7 @@ const Leaderboard: React.FC = () => {
           {ranks?.map((rank) => (
             <tr key={rank.rank}>
               <td className="text-center">{rank.rank}</td>
-              <td className="text-center">{`${rank.User.firstName} ${rank.User.familyName}`}</td>
+              <td className="text-center">{`${rank.user.firstName} ${rank.user.familyName}`}</td>
               <td className="text-center">{rank.roi}</td>
             </tr>
           ))}
