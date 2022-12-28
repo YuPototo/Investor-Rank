@@ -1,3 +1,4 @@
+import EnterNameBanner from "./EnterNameBanner";
 import Navbar from "./Navbar";
 
 type Props = {
@@ -8,6 +9,7 @@ export default function Layout({ children }: Props) {
   return (
     <>
       <Navbar />
+      <EnterNameBanner />
       <main>{children}</main>
     </>
   );

@@ -5,8 +5,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
-import getDollarId from "../../../server/utils/getDollarId.js";
-import getInitialDollar from "../../../server/utils/getInitialDollar.js";
+import getDollarId from "../../../server/utils/getDollarId";
+import getInitialDollar from "../../../server/utils/getInitialDollar";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -14,6 +14,14 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        // ! user typing is wrong
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        if (hasName(user.firstName, user.lastName)) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          session.user.name = `${user.firstName} ${user.lastName}`;
+        }
       }
       return session;
     },
@@ -63,5 +71,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+function hasName(firstName: string | null, lastName: string | null): boolean {
+  return firstName !== null && lastName !== null;
+}
 
 export default NextAuth(authOptions);
