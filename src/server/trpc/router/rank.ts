@@ -4,6 +4,17 @@ import { z } from "zod";
 export const rankRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
     const ranks = await ctx.prisma.rank.findMany({
+      select: {
+        rank: true,
+        roi: true,
+        User: {
+          select: {
+            id: true,
+            firstName: true,
+            familyName: true,
+          },
+        },
+      },
       orderBy: {
         roi: "desc",
       },

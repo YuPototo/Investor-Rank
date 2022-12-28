@@ -21,9 +21,12 @@ const Buy: NextPage = () => {
 
   // get user asset number
   const { data: sessionData } = useSession();
-  const { data: userAsset } = trpc.userAsset.getOneById.useQuery(asset!.id, {
-    enabled: asset !== undefined && sessionData !== undefined,
-  });
+  const { data: userAsset } = trpc.userAsset.getOneById.useQuery(
+    asset?.id as number,
+    {
+      enabled: asset !== undefined && sessionData !== undefined,
+    }
+  );
 
   // buy
   const utils = trpc.useContext();
