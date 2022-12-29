@@ -5,6 +5,7 @@ import userAssets from "./userAsset";
 import prices from "./price";
 import parameter from "./parameter";
 import rank from "./rank";
+import priceTime from "./priceTime";
 
 const prisma = new PrismaClient();
 
@@ -14,6 +15,7 @@ async function main() {
   await prisma.account.create({ data: userData.account });
   await prisma.session.create({ data: userData.session });
   await prisma.userAsset.createMany({ data: userAssets });
+  await prisma.priceTime.createMany({ data: priceTime });
   await prisma.price.createMany({ data: prices });
   await prisma.parameter.createMany({ data: parameter });
   await prisma.rank.createMany({ data: rank });

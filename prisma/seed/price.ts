@@ -9,37 +9,43 @@ const usdPrices = [
     id: 1,
     assetEntityId: assetEntityId.USD,
     price: 1,
-    timestamp: new Date(),
+    priceTimeId: 1,
+  },
+  {
+    id: 2,
+    assetEntityId: assetEntityId.USD,
+    price: 1,
+    priceTimeId: 2,
   },
 ];
 
 const btcPrices = [
   {
-    id: 2,
-    assetEntityId: assetEntityId.BTC,
-    price: 10000,
-    timestamp: new Date("2021-01-01"),
-  },
-  {
     id: 3,
     assetEntityId: assetEntityId.BTC,
+    price: 10000,
+    priceTimeId: 1,
+  },
+  {
+    id: 4,
+    assetEntityId: assetEntityId.BTC,
     price: 20000,
-    timestamp: new Date(),
+    priceTimeId: 2,
   },
 ];
 
 const ethPrices = [
   {
-    id: 4,
-    assetEntityId: assetEntityId.ETH,
-    price: 1000,
-    timestamp: new Date("2021-01-01"),
-  },
-  {
     id: 5,
     assetEntityId: assetEntityId.ETH,
+    price: 1000,
+    priceTimeId: 1,
+  },
+  {
+    id: 6,
+    assetEntityId: assetEntityId.ETH,
     price: 2000,
-    timestamp: new Date(),
+    priceTimeId: 2,
   },
 ];
 

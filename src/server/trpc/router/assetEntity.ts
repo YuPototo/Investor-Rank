@@ -1,5 +1,6 @@
 import { router, publicProcedure } from "../trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const assetEntityRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
@@ -15,23 +16,42 @@ export const assetEntityRouter = router({
     // get asset prices
     const assetOutput = [];
 
+    const latestPriceTime = await ctx.prisma.priceTime.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    if (!latestPriceTime) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `priceTime not found`,
+      });
+    }
+
     for (const asset of assets) {
-      const price = await ctx.prisma.price.findFirst({
+      const price = await ctx.prisma.price.findUnique({
         where: {
-          assetEntityId: asset.id,
-        },
-        orderBy: {
-          timestamp: "desc",
+          assetEntityId_priceTimeId: {
+            assetEntityId: asset.id,
+            priceTimeId: latestPriceTime.id,
+          },
         },
       });
+
       if (!price) {
-        throw new Error(`No price found for asset ${asset.id}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `price not found for ${asset.symbol}`,
+        });
       }
+
       assetOutput.push({ ...asset, price: price.price });
     }
 
     return assetOutput;
   }),
+
   getBySymbol: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
@@ -45,17 +65,33 @@ export const assetEntityRouter = router({
         throw new Error(`No asset found for symbol ${symbol}`);
       }
 
-      const price = await ctx.prisma.price.findFirst({
-        where: {
-          assetEntityId: asset.id,
-        },
+      const latestPriceTime = await ctx.prisma.priceTime.findFirst({
         orderBy: {
-          timestamp: "desc",
+          id: "desc",
+        },
+      });
+
+      if (!latestPriceTime) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `priceTime not found`,
+        });
+      }
+
+      const price = await ctx.prisma.price.findUnique({
+        where: {
+          assetEntityId_priceTimeId: {
+            assetEntityId: asset.id,
+            priceTimeId: latestPriceTime.id,
+          },
         },
       });
 
       if (!price) {
-        throw new Error(`No price found for asset ${asset.id}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `price not found for ${asset.symbol}`,
+        });
       }
 
       return { ...asset, price: price.price };
