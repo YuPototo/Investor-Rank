@@ -39,6 +39,7 @@ export const userAssetRouter = router({
     const initialDollar = await getInitialDollar(ctx.prisma);
 
     // get price and value, and roi
+    // TODO: get roi from Rank table, if not found (when user is new), then calculate it
     let totalValue = 0;
 
     const assets = await Promise.all(
@@ -137,6 +138,7 @@ export const userAssetRouter = router({
       const initialDollar = await getInitialDollar(ctx.prisma);
 
       // get price and value, and roi
+      // TODO: get roi from Rank table, if not found (when user is new), then calculate it
       let totalValue = 0;
 
       await Promise.all(

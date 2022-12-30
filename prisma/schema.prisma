@@ -93,7 +93,7 @@ model UserAsset {
     quantity      Float
     userId        String?
 
-    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id])
+    assetEntity AssetEntity @relation(fields: [assetEntityId], references: [id], onDelete: Cascade)
     user        User?       @relation(fields: [userId], references: [id])
 
     @@unique([userId, assetEntityId])
@@ -107,8 +107,8 @@ model Price {
     price         Float
     priceTimeId   Int
 
-    assetEntity AssetEntity   @relation(fields: [assetEntityId], references: [id])
-    priceTime   PriceTime     @relation(fields: [priceTimeId], references: [id])
+    assetEntity AssetEntity   @relation(fields: [assetEntityId], references: [id], onDelete: Cascade)
+    priceTime   PriceTime     @relation(fields: [priceTimeId], references: [id], onDelete: Cascade)
     transaction Transaction[]
 
     @@unique([assetEntityId, priceTimeId])
@@ -159,8 +159,7 @@ model Parameter {
 }
 
 model Rank {
-    id        Int      @id @default(autoincrement())
-    rank      Int
+    rank      Int      @id
     userId    String   @unique
     roi       Float
     timestamp DateTime
