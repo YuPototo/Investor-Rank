@@ -41,35 +41,21 @@ export const userAssetRouter = router({
     // get price and value, and roi
     let totalValue = 0;
 
-    // get latest price time
-    const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-    });
-
-    if (!latestPriceTime) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: `priceTime not found`,
-      });
-    }
-
     const assets = await Promise.all(
       userAssets.map(async (userAsset) => {
-        const price = await ctx.prisma.price.findUnique({
+        const price = await ctx.prisma.price.findFirst({
           where: {
-            assetEntityId_priceTimeId: {
-              assetEntityId: userAsset.assetEntityId,
-              priceTimeId: latestPriceTime.id,
-            },
+            assetEntityId: userAsset.assetEntityId,
+          },
+          orderBy: {
+            priceTimeId: "desc",
           },
         });
 
         if (!price) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: `Price for asset ${userAsset} not found`,
+            message: `Price for asset ${userAsset.id} not found`,
           });
         }
 
@@ -153,34 +139,21 @@ export const userAssetRouter = router({
       // get price and value, and roi
       let totalValue = 0;
 
-      const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-        orderBy: {
-          id: "desc",
-        },
-      });
-
-      if (!latestPriceTime) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `priceTime not found`,
-        });
-      }
-
       await Promise.all(
         userAssets.map(async (userAsset) => {
-          const price = await ctx.prisma.price.findUnique({
+          const price = await ctx.prisma.price.findFirst({
             where: {
-              assetEntityId_priceTimeId: {
-                assetEntityId: userAsset.assetEntityId,
-                priceTimeId: latestPriceTime.id,
-              },
+              assetEntityId: userAsset.assetEntityId,
+            },
+            orderBy: {
+              priceTimeId: "desc",
             },
           });
 
           if (!price) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: `Price for asset ${userAsset} not found`,
+              message: `Price for asset ${userAsset.id} not found`,
             });
           }
 

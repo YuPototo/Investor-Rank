@@ -118,9 +118,8 @@ model Price {
 /// This concept describes the time price getter scheduler is run
 model PriceTime {
     id        Int      @id @default(autoincrement())
-    timestamp DateTime @unique
+    timestamp DateTime @unique @default(now())
     Price     Price[]
-    Rank      Rank[]
 }
 
 /// Transaction
@@ -160,13 +159,13 @@ model Parameter {
 }
 
 model Rank {
-    rank        Int    @id @default(autoincrement())
-    userId      String @unique
-    roi         Float
-    priceTimeId Int
+    id        Int      @id @default(autoincrement())
+    rank      Int
+    userId    String   @unique
+    roi       Float
+    timestamp DateTime
 
-    priceTime PriceTime @relation(fields: [priceTimeId], references: [id])
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model LastTransaction {

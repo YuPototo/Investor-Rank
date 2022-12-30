@@ -16,33 +16,20 @@ export const assetEntityRouter = router({
     // get asset prices
     const assetOutput = [];
 
-    const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-    });
-
-    if (!latestPriceTime) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: `priceTime not found`,
-      });
-    }
-
     for (const asset of assets) {
-      const price = await ctx.prisma.price.findUnique({
+      const price = await ctx.prisma.price.findFirst({
         where: {
-          assetEntityId_priceTimeId: {
-            assetEntityId: asset.id,
-            priceTimeId: latestPriceTime.id,
-          },
+          assetEntityId: asset.id,
+        },
+        orderBy: {
+          priceTimeId: "desc",
         },
       });
 
       if (!price) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `price not found for ${asset.symbol}`,
+          message: `Price for asset ${asset.id} not found`,
         });
       }
 
@@ -65,32 +52,19 @@ export const assetEntityRouter = router({
         throw new Error(`No asset found for symbol ${symbol}`);
       }
 
-      const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-        orderBy: {
-          id: "desc",
-        },
-      });
-
-      if (!latestPriceTime) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `priceTime not found`,
-        });
-      }
-
-      const price = await ctx.prisma.price.findUnique({
+      const price = await ctx.prisma.price.findFirst({
         where: {
-          assetEntityId_priceTimeId: {
-            assetEntityId: asset.id,
-            priceTimeId: latestPriceTime.id,
-          },
+          assetEntityId: asset.id,
+        },
+        orderBy: {
+          priceTimeId: "desc",
         },
       });
 
       if (!price) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `price not found for ${asset.symbol}`,
+          message: `Price for asset ${asset.id} not found`,
         });
       }
 

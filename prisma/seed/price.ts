@@ -1,4 +1,4 @@
-const assetEntityId = {
+export const assetEntityId = {
   USD: 1,
   BTC: 2,
   ETH: 3,
@@ -10,12 +10,6 @@ const usdPrices = [
     assetEntityId: assetEntityId.USD,
     price: 1,
     priceTimeId: 1,
-  },
-  {
-    id: 2,
-    assetEntityId: assetEntityId.USD,
-    price: 1,
-    priceTimeId: 2,
   },
 ];
 

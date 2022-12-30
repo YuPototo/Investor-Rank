@@ -35,25 +35,12 @@ export const transactionRouter = router({
       const dollarAssetId = await getDollarId(ctx.prisma);
 
       // get price
-      const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-        orderBy: {
-          id: "desc",
-        },
-      });
-
-      if (!latestPriceTime) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `priceTime not found`,
-        });
-      }
-
-      const price = await ctx.prisma.price.findUnique({
+      const price = await ctx.prisma.price.findFirst({
         where: {
-          assetEntityId_priceTimeId: {
-            assetEntityId: input.assetEntityId,
-            priceTimeId: latestPriceTime.id,
-          },
+          assetEntityId: input.assetEntityId,
+        },
+        orderBy: {
+          priceTimeId: "desc",
         },
       });
 
@@ -200,25 +187,12 @@ export const transactionRouter = router({
       }
 
       // get price
-      const latestPriceTime = await ctx.prisma.priceTime.findFirst({
-        orderBy: {
-          id: "desc",
-        },
-      });
-
-      if (!latestPriceTime) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `priceTime not found`,
-        });
-      }
-
-      const price = await ctx.prisma.price.findUnique({
+      const price = await ctx.prisma.price.findFirst({
         where: {
-          assetEntityId_priceTimeId: {
-            assetEntityId: input.assetEntityId,
-            priceTimeId: latestPriceTime.id,
-          },
+          assetEntityId: input.assetEntityId,
+        },
+        orderBy: {
+          priceTimeId: "desc",
         },
       });
 
