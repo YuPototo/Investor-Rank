@@ -70,7 +70,10 @@ export const transactionRouter = router({
 
       // check if user has enough dollar
       // todo: if user doesn't have enough money, buy the amount he can afford?
-      const totalCost = price.price * input.quantity;
+
+      const totalCostRaw = price.price * input.quantity;
+      const totalCost = Math.round(totalCostRaw * 100) / 100;
+
       if (userDollar.quantity < totalCost) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -257,10 +260,13 @@ export const transactionRouter = router({
       // update user dollar
       const dollarAssetId = await getDollarId(ctx.prisma);
 
+      const revenueRaw = price.price * input.quantity;
+      const revenue = Math.round(revenueRaw * 100) / 100;
+
       await ctx.prisma.userAsset.update({
         data: {
           quantity: {
-            increment: price.price * input.quantity,
+            increment: revenue,
           },
         },
         where: {

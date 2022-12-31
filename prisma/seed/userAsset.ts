@@ -15,11 +15,12 @@ const userAssets = [
   //     userId: "clbvp8fu400009k5j6y09bt7e",
   //     quantity: 10,
   //   },
+
   // user two
   {
     assetEntityId: 1,
     userId: "clbvp8fu400009k5j6y09bt73",
-    quantity: 90000,
+    quantity: 100000,
   },
 ];
 

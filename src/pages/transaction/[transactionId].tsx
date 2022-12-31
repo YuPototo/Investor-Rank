@@ -13,6 +13,11 @@ const Transaction: NextPage = () => {
 
   const transaction = data?.transaction;
 
+  const totalValueRaw = transaction
+    ? transaction.quantity * transaction.price
+    : 0;
+  const totalValue = totalValueRaw.toFixed(2);
+
   return (
     <div>
       <h1>Transaction {transactionId}</h1>
@@ -36,7 +41,7 @@ const Transaction: NextPage = () => {
         {transaction && (
           <div>{transaction.type === "BUY" ? "cost" : "revenue"}</div>
         )}
-        {transaction && <div>${transaction.quantity * transaction.price}</div>}
+        {transaction && <div>${totalValue}</div>}
       </div>
       <div className="flex gap-4">
         <div>timestamp</div>

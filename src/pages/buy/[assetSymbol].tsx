@@ -87,6 +87,9 @@ const Buy: NextPage = () => {
     }
   };
 
+  const costRaw = asset ? asset.price * parseFloat(buyAmount) : 0;
+  const cost = Math.round(costRaw * 100) / 100;
+
   return (
     <div>
       <h1>Buy {assetSymbol}</h1>
@@ -114,7 +117,7 @@ const Buy: NextPage = () => {
 
       <div className="flex gap-4">
         <div>Cost</div>
-        {asset && <div>${asset.price * parseFloat(buyAmount)}</div>}
+        {asset && <div>${cost}</div>}
       </div>
 
       <div>
