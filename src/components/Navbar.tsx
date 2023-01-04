@@ -6,8 +6,7 @@ import Link from "next/link";
 const navigation = [
   { name: "Trade", href: "/trade" },
   { name: "Rank", href: "/rank" },
-  // todo: rename porfolio to profile
-  { name: "Profile", href: "/portfolio" },
+  { name: "Profile", href: "/profile" },
 ];
 
 const Navbar: React.FC = () => {
