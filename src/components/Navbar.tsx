@@ -31,19 +31,23 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* navbar item in lg screen */}
-          <div className="flex items-center">
-            <div className="ml-10 hidden space-x-12 lg:block">
-              {navigation.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-base font-medium text-white hover:text-indigo-50"
-                >
-                  {link.name}
-                </Link>
-              ))}
+          {sessionData ? (
+            <div className="flex items-center">
+              <div className="ml-10 hidden space-x-12 lg:block">
+                {navigation.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-base font-medium text-white hover:text-indigo-50"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <></>
+          )}
 
           {/* button */}
           <div className="ml-10 space-x-4">
@@ -57,17 +61,21 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* NavBar icon in small screen */}
-        <div className="flex flex-wrap justify-center space-x-6 py-4 lg:hidden">
-          {navigation.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-base font-medium text-white hover:text-indigo-50"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+        {sessionData ? (
+          <div className="flex flex-wrap justify-center space-x-6 py-4 lg:hidden">
+            {navigation.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-base font-medium text-white hover:text-indigo-50"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
       </nav>
     </header>
   );

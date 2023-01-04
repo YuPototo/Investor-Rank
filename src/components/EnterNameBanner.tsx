@@ -4,13 +4,17 @@ import { useRouter } from "next/router";
 
 const EnterNameBanner: React.FC = () => {
   const { data: sessionData } = useSession();
+
   const user = sessionData?.user;
   const hasName = user?.name;
 
   const { pathname } = useRouter();
+
   const isOnEnterNamePage = pathname === "/enterName";
 
-  if (hasName || isOnEnterNamePage) return <></>;
+  if (!sessionData) return <></>;
+
+  if (isOnEnterNamePage || hasName) return <></>;
 
   return (
     <div className="relative bg-red-300">
