@@ -31,7 +31,7 @@ const Home: NextPage = () => {
               </>
             )}
           </div>
-          <div className="w-full sm:w-1/2">
+          <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
             <Leaderboard />
           </div>
         </div>
