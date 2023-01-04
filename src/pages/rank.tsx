@@ -3,8 +3,10 @@ import Leaderboard from "../components/Leaderboard";
 
 const Rank: NextPage = () => {
   return (
-    <div>
-      <Leaderboard />
+    <div className="mt-10 flex items-center">
+      <div className="mx-auto w-[calc(100%_-_5em)] sm:w-2/3 md:w-1/2">
+        <Leaderboard />
+      </div>
     </div>
   );
 };
