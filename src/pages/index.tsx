@@ -17,14 +17,17 @@ const Home: NextPage = () => {
       </Head>
       <div className="min-h-full bg-gray-50">
         <div className="container mx-auto flex w-full flex-col justify-center gap-12 px-4 py-16 sm:flex-row">
-          <div className="w-full sm:w-1/2">
+          <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
             {sessionData === null ? (
               <SignInCallOut />
             ) : (
               <>
                 <Portfolio />
                 <div className="mt-10 text-center">
-                  <Link className="btn-primary" href="/trade">
+                  <Link
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    href="/trade"
+                  >
                     Go to trade
                   </Link>
                 </div>
