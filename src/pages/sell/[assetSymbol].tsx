@@ -5,6 +5,7 @@ import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import toast from "react-hot-toast";
 import TransactionLockHint from "../../components/TransactionLockHint";
+import PriceExplanation from "../../components/PriceExplanation";
 
 const Buy: NextPage = () => {
   const [sellAmount, setSellAmount] = useState("0.01");
@@ -142,10 +143,7 @@ const Buy: NextPage = () => {
         </button>
       </div>
 
-      <div className="mt-6 text-sm text-gray-600">
-        Note: your dealing price could be slightly different from what you see
-        here. Here is why. (todo: link to a notion page)
-      </div>
+      <PriceExplanation />
     </div>
   );
 };
