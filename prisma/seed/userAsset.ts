@@ -1,27 +1,13 @@
-const userAssets = [
-  // user one
-  {
-    assetEntityId: 1,
-    userId: "clbvp8fu400009k5j6y09bt7e",
-    quantity: 100000,
-  },
-  //   {
-  //     assetEntityId: 2, // btc
-  //     userId: "clbvp8fu400009k5j6y09bt7e",
-  //     quantity: 3,
-  //   },
-  //   {
-  //     assetEntityId: 3, // eth
-  //     userId: "clbvp8fu400009k5j6y09bt7e",
-  //     quantity: 10,
-  //   },
+import { users } from "./user";
 
-  // user two
-  {
+function createUser(id: string) {
+  return {
     assetEntityId: 1,
-    userId: "clbvp8fu400009k5j6y09bt73",
+    userId: id,
     quantity: 100000,
-  },
-];
+  };
+}
+
+const userAssets = users.map((user) => createUser(user.id));
 
 export default userAssets;

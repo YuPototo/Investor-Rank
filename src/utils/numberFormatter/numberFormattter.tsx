@@ -1,3 +1,3 @@
 export function toPercent(num: number): string {
-  return `${num * 100}%`;
+  return `${Math.round(num * 1000) / 10}%`;
 }
