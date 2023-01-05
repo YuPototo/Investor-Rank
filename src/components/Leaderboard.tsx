@@ -42,7 +42,9 @@ const Leaderboard: React.FC = () => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {rank.rank}
                       </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">{`${rank.user.firstName} ${rank.user.familyName}`}</td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                        {getFullName(rank.user.firstName, rank.user.familyName)}
+                      </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {toPercent(rank.roi)}
                       </td>
@@ -57,5 +59,13 @@ const Leaderboard: React.FC = () => {
     </div>
   );
 };
+
+function getFullName(
+  firstName: string | null,
+  familyName: string | null
+): string {
+  if (!firstName || !familyName) return "unnamed";
+  return firstName + " " + familyName;
+}
 
 export default Leaderboard;
