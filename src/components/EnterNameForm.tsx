@@ -57,44 +57,62 @@ const EnterNameForm: React.FC = () => {
         handleSubmit,
         isSubmitting,
       }) => (
-        <Form className="flex w-64 flex-col gap-4" onSubmit={handleSubmit}>
+        <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
-            <label className="mr-4" htmlFor="firstName">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700"
+            >
               First Name
             </label>
-            <input
-              className="focus:shadow-outline appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-              type="firstName"
-              name="firstName"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.firstName}
-            />
+            <div className="my-1">
+              <input
+                className="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                type="firstName"
+                name="firstName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.firstName}
+              />
+            </div>
+
             <div className="text-sm text-red-500">
               {errors.firstName && touched.firstName && errors.firstName}
             </div>
           </div>
 
           <div>
-            <label className="mr-4" htmlFor="familyName">
+            <label
+              htmlFor="familyName"
+              className="block text-sm font-medium text-gray-700"
+            >
               Family Name
             </label>
-            <input
-              className="focus:shadow-outline appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-              type="familyName"
-              name="familyName"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.familyName}
-            />
+            <div className="my-1">
+              <input
+                className="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 "
+                type="familyName"
+                name="familyName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.familyName}
+              />
+            </div>
+
             <div className="text-sm text-red-500">
               {errors.familyName && touched.familyName && errors.familyName}
             </div>
           </div>
 
-          <button className="btn-primary" type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
+          <div className="mx-auto">
+            <button
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              Submit
+            </button>
+          </div>
         </Form>
       )}
     </Formik>

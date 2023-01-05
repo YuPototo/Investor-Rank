@@ -10,8 +10,8 @@ const TransactionLockHint: React.FC<Props> = ({
   availableInMins,
 }) => {
   return (
-    <div className="my-2 bg-yellow-50 p-2 text-sm">
-      <div className="text-red-500">
+    <div className="mt-2 mb-6 rounded bg-red-100 p-2">
+      <div>
         You cannot {transactionType.toLowerCase()} {assetSymbol} for{" "}
         {availableInMins} minutes.
       </div>
@@ -22,7 +22,7 @@ const TransactionLockHint: React.FC<Props> = ({
         >
           Check this post{" "}
         </a>
-        to understand why there is this feature
+        to understand why
       </div>
     </div>
   );

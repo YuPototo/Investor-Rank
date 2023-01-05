@@ -91,38 +91,37 @@ const Buy: NextPage = () => {
   const cost = Math.round(costRaw * 100) / 100;
 
   return (
-    <div>
-      <h1>Buy {assetSymbol}</h1>
-      <div className="flex gap-4">
-        <div>Price</div>
+    <div className="mx-5 sm:mx-auto sm:w-2/3 md:w-1/2 lg:w-1/3">
+      <h1 className="mb-6 mt-6 text-center text-2xl">Buy {assetSymbol}</h1>
+
+      <div className="mb-2 flex gap-4">
+        <div className="text-gray-700">Price</div>
         {asset && <div>${asset.price}</div>}
       </div>
 
       <div className="flex gap-4">
-        <div>Your balance</div>
+        <div className="text-gray-700">Balance</div>
         {balance && <div>${balance}</div>}
       </div>
 
-      <div className="flex items-center gap-4">
-        <div>Buy Amount</div>
+      <div className="mt-6 mb-2 flex items-center gap-4">
+        <label htmlFor="buyAmount" className=" text-gray-700">
+          Buy Amount
+        </label>
         <input
           disabled={!isTransactionPossible}
-          className="rounded border border-blue-300 py-1 px-2"
+          className="flex-grow rounded border border-indigo-600 py-2 px-3"
           type="number"
           min="0.01"
+          id="buyAmount"
           value={buyAmount}
           onChange={handleChange}
         ></input>
       </div>
 
       <div className="flex gap-4">
-        <div>Cost</div>
+        <div className="text-gray-700">Cost</div>
         {asset && <div>${cost}</div>}
-      </div>
-
-      <div>
-        note: your dealing price could be slightly different from what you see
-        here. Here is why. (todo: link to a notion page)
       </div>
 
       {isTransactionPossible || (
@@ -133,13 +132,20 @@ const Buy: NextPage = () => {
         />
       )}
 
-      <button
-        disabled={!isTransactionPossible}
-        className="btn-primary"
-        onClick={handleBuy}
-      >
-        Confirm
-      </button>
+      <div className="mt-6 flex justify-center">
+        <button
+          disabled={!isTransactionPossible}
+          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={handleBuy}
+        >
+          Confirm
+        </button>
+      </div>
+
+      <div className="mt-6 text-sm text-gray-600">
+        Note: your dealing price could be slightly different from what you see
+        here. Here is why. (todo: link to a notion page)
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
+import BuyableAssets from "../components/BuyableAssets";
 import UserAssets from "../components/UserAssets";
 import { trpc } from "../utils/trpc";
 
@@ -13,9 +13,6 @@ const Trade: NextPage = () => {
   });
   const balance = balanceRes?.balance;
 
-  // get buyable assets
-  const { data: buyableAssets } = trpc.assetEntity.getBuyable.useQuery();
-
   // get user assets
   const { data } = trpc.userAsset.getAll.useQuery(undefined, {
     enabled: sessionData?.user !== undefined,
@@ -27,27 +24,17 @@ const Trade: NextPage = () => {
   return (
     <div>
       {balance !== undefined && (
-        <div className="mt-6 text-center font-bold">
-          Your balance: ${balance}
-        </div>
+        <div className="my-6 text-center">Your balance: ${balance}</div>
       )}
 
-      <div className="flex">
-        <div className="w-1/2">
-          <h2 className="mb-4 font-bold">Buy</h2>
-          {buyableAssets?.map((asset) => (
-            <div className="my-2 flex items-center gap-4" key={asset.id}>
-              <div>{asset.symbol}</div>
-              <div>{asset.price}</div>
-              <Link href={`/buy/${asset.symbol}`} className="btn-primary">
-                Buy
-              </Link>
-            </div>
-          ))}
+      <div className="flex flex-col gap-14 md:flex-row md:gap-4">
+        <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
+          <h2 className="mb-6 text-center font-bold text-indigo-600">Buy</h2>
+          <BuyableAssets />
         </div>
 
-        <div className="w-1/2">
-          <h2 className="mb-4 text-center font-bold">Sell</h2>
+        <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
+          <h2 className="mb-6 text-center font-bold text-indigo-600">Sell</h2>
           {hasAssets ? (
             <UserAssets showUsd={false} />
           ) : (

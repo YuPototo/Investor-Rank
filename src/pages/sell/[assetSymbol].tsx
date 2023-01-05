@@ -91,39 +91,8 @@ const Buy: NextPage = () => {
   };
 
   return (
-    <div>
-      <h1>Sell {assetSymbol}</h1>
-      <div className="flex gap-4">
-        <div>Price</div>
-        {asset && <div>${asset.price}</div>}
-      </div>
-
-      <div className="flex gap-4">
-        <div>Your Holding</div>
-        {userAsset && <div>{userAsset.quantity}</div>}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div>Sell Amount</div>
-        <input
-          className="rounded border border-blue-300 py-1 px-2"
-          disabled={!isTransactionPossible}
-          type="number"
-          min="0.0001"
-          value={sellAmount}
-          onChange={handleChange}
-        ></input>
-      </div>
-
-      <div className="flex gap-4">
-        <div>Revenue</div>
-        {asset && <div>${asset.price * parseFloat(sellAmount)}</div>}
-      </div>
-
-      <div>
-        note: your dealing price could be slightly different from what you see
-        here. Here is why. (todo: link to a notion page)
-      </div>
+    <div className="mx-5 sm:mx-auto sm:w-2/3 md:w-1/2 lg:w-1/3">
+      <h1 className="mb-6 mt-6 text-center text-2xl">Sell {assetSymbol}</h1>
 
       {isTransactionPossible || (
         <TransactionLockHint
@@ -133,13 +102,50 @@ const Buy: NextPage = () => {
         />
       )}
 
-      <button
-        disabled={!isTransactionPossible}
-        className="btn-primary"
-        onClick={handleSell}
-      >
-        Confirm
-      </button>
+      <div className="mb-2 flex gap-4">
+        <div className="text-gray-700">Price</div>
+        {asset && <div>${asset.price}</div>}
+      </div>
+
+      <div className="flex gap-4">
+        <div className="text-gray-700">Holding</div>
+        {userAsset && <div>{userAsset.quantity}</div>}
+      </div>
+
+      <div className="mt-6 mb-2  flex items-center gap-4">
+        <label htmlFor="sellAmount" className=" text-gray-700">
+          Sell Amount
+        </label>
+        <input
+          className="flex-grow rounded border border-indigo-600 py-2 px-3"
+          disabled={!isTransactionPossible}
+          type="number"
+          min="0.0001"
+          id="sellAmount"
+          value={sellAmount}
+          onChange={handleChange}
+        ></input>
+      </div>
+
+      <div className="flex gap-4">
+        <div className="text-gray-700">Revenue</div>
+        {asset && <div>${asset.price * parseFloat(sellAmount)}</div>}
+      </div>
+
+      <div className="mt-6 flex justify-center">
+        <button
+          disabled={!isTransactionPossible}
+          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={handleSell}
+        >
+          Confirm
+        </button>
+      </div>
+
+      <div className="mt-6 text-sm text-gray-600">
+        Note: your dealing price could be slightly different from what you see
+        here. Here is why. (todo: link to a notion page)
+      </div>
     </div>
   );
 };

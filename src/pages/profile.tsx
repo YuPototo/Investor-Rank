@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import UserAssets from "../components/UserAssets";
+import { toPercent } from "../utils/numberFormatter/numberFormattter";
 import { trpc } from "../utils/trpc";
 
 const Portfolio: NextPage = () => {
@@ -13,21 +14,31 @@ const Portfolio: NextPage = () => {
 
   return (
     <div>
-      <h1>Portfolio</h1>
-      <div>
-        <h2>Performance</h2>
-        <div className="flex gap-4">
-          <div>Rank</div>
-          {data && <div>{`${data.rank} / ${data.userCount}`}</div>}
-        </div>
-        <div className="flex gap-4">
-          <div>ROI</div>
-          {data && <div>{data.roi}</div>}
-        </div>
+      <div className="mx-auto mt-6 w-10/12 md:w-1/2">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Performance
+        </h3>
+        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt className="truncate text-sm font-medium text-gray-500">Rank</dt>
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              {data && <div>{`${data.rank} / ${data.userCount}`}</div>}
+            </dd>
+          </div>
+
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt className="truncate text-sm font-medium text-gray-500">ROI</dt>
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              {data && <div>{toPercent(data.roi)}</div>}
+            </dd>
+          </div>
+        </dl>
       </div>
 
-      <div>
-        <h1>Assets</h1>
+      <div className="mx-auto mt-16 w-10/12 md:w-1/2">
+        <h3 className=" mb-6 text-lg font-medium leading-6 text-gray-900">
+          Assets
+        </h3>
         <UserAssets showUsd />
       </div>
     </div>

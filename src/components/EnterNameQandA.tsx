@@ -1,12 +1,14 @@
 const EnterNameQandA: React.FC = () => {
   return (
     <div className="">
-      <div className="mb-4">
-        <div className="mb-2 font-bold">What will your name be used for?</div>
+      <div className="mb-6">
+        <div className="mb-2 font-bold text-gray-800">
+          What will your name be used for?
+        </div>
         <div>Your name is displayed in your profile and in leaderboard.</div>
       </div>
-      <div className="mb-4">
-        <div className="mb-2 font-bold">Why real name?</div>
+      <div className="mb-6">
+        <div className="mb-2 font-bold text-gray-800">Why real name?</div>
         <div>
           We need real name to create{" "}
           <a
@@ -19,14 +21,14 @@ const EnterNameQandA: React.FC = () => {
           reputation.
         </div>
       </div>
-      <div className="mb-4">
-        <div className="mb-2 font-bold">
+      <div className="mb-6">
+        <div className="mb-2 font-bold text-gray-800">
           How do we know you give the real name?
         </div>
         <div>{"We don't know. In the future we will have identity check."}</div>
       </div>
-      <div className="mb-4">
-        <div className="mb-2 font-bold">
+      <div className="mb-6">
+        <div className="mb-2 font-bold text-gray-800">
           Why do we delete account without name?
         </div>
         <div>
