@@ -68,7 +68,7 @@ export const userAssetRouter = router({
           quantity: userAsset.quantity,
           symbol: userAsset.assetEntity.symbol,
           price: price.price,
-          value: price.price * userAsset.quantity,
+          value: Math.round(price.price * userAsset.quantity * 100) / 100,
         };
         return userAssetOutput;
       })
