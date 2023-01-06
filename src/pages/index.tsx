@@ -38,6 +38,24 @@ const Home: NextPage = () => {
             <Leaderboard />
           </div>
         </div>
+
+        {/* Footer */}
+        <div className="absolute bottom-0 w-full">
+          <div className="flex items-center justify-center gap-4 pb-4">
+            <a
+              className="text-sm text-indigo-500"
+              href="https://juicy-alibi-f68.notion.site/Privacy-Policy-20aa69e3b0014ba9aa5ebc03f18c0eb5"
+            >
+              Privacy Policy
+            </a>
+            <a
+              className="text-sm text-indigo-500"
+              href="https://juicy-alibi-f68.notion.site/Term-of-Use-6a96a74a99b64c1e92e629f176eedbab"
+            >
+              Term of Use
+            </a>
+          </div>
+        </div>
       </div>
     </>
   );
