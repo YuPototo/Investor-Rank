@@ -1,5 +1,7 @@
 # Investor Rank
 
+[rankvestor.com/]（https://www.rankvestor.com/）
+
 A platform for people to predict with **fake** money under **real** name.
 
 It creates [Skin in the Game](https://www.amazon.com/Skin-Game-Hidden-Asymmetries-Daily/dp/042528462X).
