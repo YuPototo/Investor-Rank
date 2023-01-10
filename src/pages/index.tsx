@@ -6,7 +6,9 @@ import Leaderboard from "../components/Leaderboard";
 import Link from "next/link";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { status: sessionStatus } = useSession();
+
+  const hasLogin = sessionStatus === "authenticated";
 
   return (
     <>
@@ -18,7 +20,7 @@ const Home: NextPage = () => {
       <div className="min-h-full bg-gray-50">
         <div className="container mx-auto flex w-full flex-col justify-center gap-12 px-4 py-16 sm:flex-row">
           <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
-            {sessionData === null ? (
+            {!hasLogin ? (
               <SignInCallOut />
             ) : (
               <>
