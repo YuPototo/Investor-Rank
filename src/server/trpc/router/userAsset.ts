@@ -93,7 +93,9 @@ export const userAssetRouter = router({
       throw new Error("Dollar asset not found");
     }
 
-    return { balance: userAsset.quantity };
+    const balance = Math.round(userAsset.quantity * 100) / 100;
+
+    return { balance };
   }),
   getOneById: protectedProcedure
     .input(z.number())

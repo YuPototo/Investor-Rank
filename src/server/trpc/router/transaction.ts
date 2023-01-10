@@ -9,7 +9,7 @@ export const transactionRouter = router({
   buy: protectedProcedure
     .input(
       z.object({
-        quantity: z.number().min(0.0001),
+        quantity: z.number().min(0.01),
         assetEntityId: z.number(),
       })
     )
@@ -51,6 +51,15 @@ export const transactionRouter = router({
         });
       }
 
+      // total cost/revenue should be larger than 100 dollars
+      const totalCostRaw = price.price * input.quantity;
+      if (totalCostRaw < 100) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cost should be larger than 100 dollars",
+        });
+      }
+
       // get user dollar
       const userDollar = await ctx.prisma.userAsset.findUnique({
         where: {
@@ -71,8 +80,7 @@ export const transactionRouter = router({
       // check if user has enough dollar
       // todo: if user doesn't have enough money, buy the amount he can afford?
 
-      const totalCostRaw = price.price * input.quantity;
-      const totalCost = Math.round(totalCostRaw * 100) / 100;
+      const totalCost = Math.round(totalCostRaw * 10000) / 10000;
 
       if (userDollar.quantity < totalCost) {
         throw new TRPCError({
@@ -167,7 +175,7 @@ export const transactionRouter = router({
   sell: protectedProcedure
     .input(
       z.object({
-        quantity: z.number().min(0.0001),
+        quantity: z.number().min(0.01),
         assetEntityId: z.number(),
       })
     )
@@ -261,7 +269,7 @@ export const transactionRouter = router({
       const dollarAssetId = await getDollarId(ctx.prisma);
 
       const revenueRaw = price.price * input.quantity;
-      const revenue = Math.round(revenueRaw * 100) / 100;
+      const revenue = Math.round(revenueRaw * 10000) / 10000;
 
       await ctx.prisma.userAsset.update({
         data: {
