@@ -7,7 +7,7 @@ type Props = {
   showSellBtn: boolean;
 };
 
-const UserAssets: React.FC<Props> = ({ showUsd, showSellBtn }) => {
+const UserAssetTable: React.FC<Props> = ({ showUsd, showSellBtn }) => {
   const { data: sessionData } = useSession();
   const { data, isLoading } = trpc.userAsset.getAll.useQuery(undefined, {
     enabled: sessionData?.user !== undefined,
@@ -130,4 +130,4 @@ const AssetSkeleton: React.FC = () => {
   );
 };
 
-export default UserAssets;
+export default UserAssetTable;

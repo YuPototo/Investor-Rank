@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
-import UserAssets from "../components/UserAssets";
+import UserAssetTable from "../components/UserAssetTable";
 import { toPercent } from "../utils/numberFormatter/numberFormattter";
 import { trpc } from "../utils/trpc";
 
@@ -39,7 +39,7 @@ const Portfolio: NextPage = () => {
         <h3 className=" mb-6 text-lg font-medium leading-6 text-gray-900">
           Assets
         </h3>
-        <UserAssets showUsd showSellBtn />
+        <UserAssetTable showUsd showSellBtn />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import BuyableAssets from "../components/BuyableAssets";
-import UserAssets from "../components/UserAssets";
+import UserAssets from "../components/UserAssetTable";
 import { trpc } from "../utils/trpc";
 
 const Trade: NextPage = () => {

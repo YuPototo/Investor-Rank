@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { toPercent } from "../utils/numberFormatter/numberFormattter";
 import { trpc } from "../utils/trpc";
-import UserAssets from "./UserAssets";
+import UserAssetTable from "./UserAssetTable";
 
 const Portfolio: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -19,7 +19,7 @@ const Portfolio: React.FC = () => {
         <div className="mb-3 text-center">ROI: {toPercent(roi)}</div>
       ) : null}
 
-      <UserAssets showUsd showSellBtn={false} />
+      <UserAssetTable showUsd showSellBtn={false} />
     </div>
   );
 };
