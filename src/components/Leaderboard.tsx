@@ -2,7 +2,7 @@ import { toPercent } from "../utils/numberFormatter/numberFormattter";
 import { trpc } from "../utils/trpc";
 
 const Leaderboard: React.FC = () => {
-  const { data: ranks } = trpc.rank.get.useQuery(undefined);
+  const { data: ranks, isLoading } = trpc.rank.get.useQuery(undefined);
 
   return (
     <div>
@@ -37,12 +37,13 @@ const Leaderboard: React.FC = () => {
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 bg-white">
+                  {isLoading ? <Skeleton /> : <></>}
                   {ranks?.map((rank) => (
                     <tr key={rank.user.id}>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
                         {rank.rank}
                       </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                      <td className="whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900  ">
                         {getFullName(rank.user.firstName, rank.user.familyName)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -67,5 +68,28 @@ function getFullName(
   if (!firstName || !familyName) return "unnamed";
   return firstName + " " + familyName;
 }
+
+const Skeleton: React.FC = () => {
+  // a array of 10 elements
+  const arr = Array.from(Array(6).keys());
+
+  return (
+    <>
+      {arr.map((i) => (
+        <tr className="animate-pulse" key={i}>
+          <td className="whitespace-nowrap py-2  pl-4 text-sm text-gray-500 sm:pl-6">
+            <div className="h-6 w-12 rounded-full bg-gray-300"></div>
+          </td>
+          <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+            <div className="h-6 w-24 rounded-full bg-gray-300"></div>
+          </td>
+          <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+            <div className="h-6 w-14 rounded-full bg-gray-300"></div>
+          </td>
+        </tr>
+      ))}
+    </>
+  );
+};
 
 export default Leaderboard;
