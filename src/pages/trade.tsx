@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import BuyableAssets from "../components/BuyableAssets";
-import UserAssets from "../components/UserAssetTable";
+import UserAssetTable from "../components/UserAssetTable";
 import { trpc } from "../utils/trpc";
 
 const Trade: NextPage = () => {
@@ -22,7 +22,7 @@ const Trade: NextPage = () => {
   const hasAssets = assets?.length && assets?.length > 1;
 
   return (
-    <div>
+    <div className="pb-16">
       {balance !== undefined && (
         <div className="my-6 text-center">Your balance: ${balance}</div>
       )}
@@ -36,7 +36,7 @@ const Trade: NextPage = () => {
         <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
           <h2 className="mb-6 text-center font-bold text-indigo-600">Sell</h2>
           {hasAssets ? (
-            <UserAssets showUsd={false} />
+            <UserAssetTable showUsd={false} showSellBtn />
           ) : (
             <div className="text-center">No sellable assets</div>
           )}

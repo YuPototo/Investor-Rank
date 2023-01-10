@@ -3,7 +3,8 @@ import { trpc } from "../utils/trpc";
 
 const BuyableAssets: React.FC = () => {
   // get buyable assets
-  const { data: buyableAssets } = trpc.assetEntity.getBuyable.useQuery();
+  const { data: buyableAssets, isLoading } =
+    trpc.assetEntity.getBuyable.useQuery();
 
   return (
     <div className="flex flex-col">
@@ -36,6 +37,7 @@ const BuyableAssets: React.FC = () => {
               </thead>
 
               <tbody className="divide-y divide-gray-200 bg-white">
+                {isLoading ? <LoadingSkeleton /> : <></>}
                 {buyableAssets?.map((asset) => (
                   <tr key={asset.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
@@ -60,6 +62,26 @@ const BuyableAssets: React.FC = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const LoadingSkeleton: React.FC = () => {
+  // a array of 6 elements
+  const arr = Array.from(Array(6).keys());
+
+  return (
+    <>
+      {arr.map((i) => (
+        <tr className="animate-pulse" key={i}>
+          <td className="whitespace-nowrap py-2  pl-4 text-sm text-gray-500 sm:pl-6">
+            <div className="h-6 w-10 rounded-full bg-gray-300"></div>
+          </td>
+          <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+            <div className="h-6 w-16 rounded-full bg-gray-300"></div>
+          </td>
+        </tr>
+      ))}
+    </>
   );
 };
 
