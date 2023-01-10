@@ -37,7 +37,7 @@ const Leaderboard: React.FC = () => {
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {isLoading ? <Skeleton /> : <></>}
+                  {isLoading ? <LeaderBoardSkeleton /> : <></>}
                   {ranks?.map((rank) => (
                     <tr key={rank.user.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
@@ -69,7 +69,7 @@ function getFullName(
   return firstName + " " + familyName;
 }
 
-const Skeleton: React.FC = () => {
+const LeaderBoardSkeleton: React.FC = () => {
   // a array of 10 elements
   const arr = Array.from(Array(6).keys());
 

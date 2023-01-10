@@ -39,7 +39,7 @@ const Portfolio: NextPage = () => {
         <h3 className=" mb-6 text-lg font-medium leading-6 text-gray-900">
           Assets
         </h3>
-        <UserAssets showUsd />
+        <UserAssets showUsd showSellBtn />
       </div>
     </div>
   );
