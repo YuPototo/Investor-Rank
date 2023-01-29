@@ -1,3 +1,4 @@
+// todo
 import { TRPCError } from "@trpc/server";
 import getDollarId from "../../utils/getDollarId";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
@@ -44,31 +45,29 @@ export const userAssetRouter = router({
 
     const assets = await Promise.all(
       userAssets.map(async (userAsset) => {
-        const price = await ctx.prisma.price.findFirst({
+        const assetEntity = await ctx.prisma.assetEntity.findUnique({
           where: {
-            assetEntityId: userAsset.assetEntityId,
-          },
-          orderBy: {
-            priceTimeId: "desc",
+            id: userAsset.assetEntityId,
           },
         });
 
-        if (!price) {
+        if (!assetEntity) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: `Price for asset ${userAsset.id} not found`,
+            message: `Asset entity ${userAsset.assetEntityId} not found`,
           });
         }
 
         // update total value
-        totalValue += price.price * userAsset.quantity;
+        totalValue += assetEntity.price * userAsset.quantity;
 
         const userAssetOutput: AssetItem = {
           id: userAsset.id,
           quantity: Math.round(userAsset.quantity * 100) / 100,
           symbol: userAsset.assetEntity.symbol,
-          price: price.price,
-          value: Math.round(price.price * userAsset.quantity * 10000) / 10000,
+          price: assetEntity.price,
+          value:
+            Math.round(assetEntity.price * userAsset.quantity * 10000) / 10000,
         };
         return userAssetOutput;
       })
@@ -145,16 +144,13 @@ export const userAssetRouter = router({
 
       await Promise.all(
         userAssets.map(async (userAsset) => {
-          const price = await ctx.prisma.price.findFirst({
+          const assetEntity = await ctx.prisma.assetEntity.findUnique({
             where: {
-              assetEntityId: userAsset.assetEntityId,
-            },
-            orderBy: {
-              priceTimeId: "desc",
+              id: userAsset.assetEntityId,
             },
           });
 
-          if (!price) {
+          if (!assetEntity) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: `Price for asset ${userAsset.id} not found`,
@@ -162,7 +158,7 @@ export const userAssetRouter = router({
           }
 
           // update total value
-          totalValue += price.price * userAsset.quantity;
+          totalValue += assetEntity.price * userAsset.quantity;
         })
       );
 

@@ -1,4 +1,6 @@
-export const users = [
+import type { User } from "@prisma/client";
+
+export const users: Omit<User, "createdAt">[] = [
   {
     id: "clbvp8fu400009k5j6y09bt7e",
     email: "sirius.qinyu@gmail.com",
