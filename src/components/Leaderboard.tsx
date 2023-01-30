@@ -1,8 +1,21 @@
+import clsx from "clsx";
+import Link from "next/link";
+import { useState } from "react";
 import { toPercent } from "../utils/numberFormatter/numberFormattter";
 import { trpc } from "../utils/trpc";
 
-const Leaderboard: React.FC = () => {
-  const { data: ranks, isLoading } = trpc.rank.get.useQuery(undefined);
+type Props = {
+  isHome?: boolean;
+};
+
+const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
+  const [page, setPage] = useState(0);
+
+  const { data, isLoading } = trpc.rank.get.useQuery({
+    page,
+  });
+
+  const { ranks, hasPrevPage, hasNextPage } = data || {};
 
   return (
     <div>
@@ -57,6 +70,33 @@ const Leaderboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {isHome ? (
+        <div className="mt-10">
+          <Link href="/rank">More</Link>
+        </div>
+      ) : (
+        <div className="mt-10 flex justify-between">
+          <button
+            className={clsx(
+              "rounded-l bg-gray-200 py-2 px-4 font-bold text-gray-800 hover:bg-gray-300",
+              { invisible: !hasPrevPage }
+            )}
+            onClick={() => setPage(page - 1)}
+          >
+            Prev
+          </button>
+          <button
+            className={clsx(
+              "rounded-l bg-gray-200 py-2 px-4 font-bold text-gray-800 hover:bg-gray-300",
+              { invisible: !hasNextPage }
+            )}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

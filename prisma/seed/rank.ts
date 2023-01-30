@@ -1,4 +1,4 @@
-import { users } from "./user";
+import users from "./user";
 import type { Rank } from "@prisma/client";
 
 function createRank(id: string): Rank {
