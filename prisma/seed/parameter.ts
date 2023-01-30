@@ -1,6 +1,7 @@
+import type { Parameter } from "@prisma/client";
 import { ParameterType } from "@prisma/client";
 
-const data = [
+const data: Omit<Parameter, "id">[] = [
   {
     key: "dollarAssetId",
     value: "1",

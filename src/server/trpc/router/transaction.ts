@@ -1,3 +1,4 @@
+// todo
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
@@ -16,11 +17,13 @@ export const transactionRouter = router({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
 
+      const { assetEntityId } = input;
+
       // check last transaction
       const { isPossible } = await checkTransactionPossibiliy(
         ctx.prisma,
         userId,
-        input.assetEntityId,
+        assetEntityId,
         "BUY"
       );
 
@@ -35,24 +38,22 @@ export const transactionRouter = router({
       const dollarAssetId = await getDollarId(ctx.prisma);
 
       // get price
-      const price = await ctx.prisma.price.findFirst({
+      const assetEntity = await ctx.prisma.assetEntity.findFirst({
         where: {
-          assetEntityId: input.assetEntityId,
-        },
-        orderBy: {
-          priceTimeId: "desc",
+          id: assetEntityId,
         },
       });
 
-      if (!price) {
+      if (!assetEntity) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `Price for asset ${input.assetEntityId} not found`,
+          message: `AssetEntity for asset ${input.assetEntityId} not found`,
         });
       }
 
       // total cost/revenue should be larger than 100 dollars
-      const totalCostRaw = price.price * input.quantity;
+      const totalCostRaw = assetEntity.price * input.quantity;
+
       if (totalCostRaw < 100) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -143,7 +144,7 @@ export const transactionRouter = router({
         data: {
           userId,
           assetEntityId: input.assetEntityId,
-          priceId: price.id,
+          price: assetEntity.price,
           quantity: input.quantity,
           type: "BUY",
           timestamp: new Date(),
@@ -182,11 +183,13 @@ export const transactionRouter = router({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
 
+      const { assetEntityId } = input;
+
       // check last transaction
       const { isPossible } = await checkTransactionPossibiliy(
         ctx.prisma,
         userId,
-        input.assetEntityId,
+        assetEntityId,
         "SELL"
       );
 
@@ -198,19 +201,16 @@ export const transactionRouter = router({
       }
 
       // get price
-      const price = await ctx.prisma.price.findFirst({
+      const assetEntity = await ctx.prisma.assetEntity.findFirst({
         where: {
-          assetEntityId: input.assetEntityId,
-        },
-        orderBy: {
-          priceTimeId: "desc",
+          id: assetEntityId,
         },
       });
 
-      if (!price) {
+      if (!assetEntity) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `Price for asset ${input.assetEntityId} not found`,
+          message: `AssetEntity for asset ${input.assetEntityId} not found`,
         });
       }
 
@@ -268,7 +268,7 @@ export const transactionRouter = router({
       // update user dollar
       const dollarAssetId = await getDollarId(ctx.prisma);
 
-      const revenueRaw = price.price * input.quantity;
+      const revenueRaw = assetEntity.price * input.quantity;
       const revenue = Math.round(revenueRaw * 10000) / 10000;
 
       await ctx.prisma.userAsset.update({
@@ -290,7 +290,7 @@ export const transactionRouter = router({
         data: {
           userId,
           assetEntityId: input.assetEntityId,
-          priceId: price.id,
+          price: assetEntity.price,
           quantity: input.quantity,
           type: "SELL",
           timestamp: new Date(),
@@ -331,14 +331,10 @@ export const transactionRouter = router({
         type: true,
         quantity: true,
         timestamp: true,
+        price: true,
         assetEntity: {
           select: {
             symbol: true,
-          },
-        },
-        price: {
-          select: {
-            price: true,
           },
         },
       },
@@ -354,7 +350,6 @@ export const transactionRouter = router({
     const output = {
       ...transaction,
       assetEntity: transaction.assetEntity.symbol,
-      price: transaction.price.price,
     };
 
     return { transaction: output };
