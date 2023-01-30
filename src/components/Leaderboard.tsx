@@ -72,8 +72,13 @@ const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
       </div>
 
       {isHome ? (
-        <div className="mt-10">
-          <Link href="/rank">More</Link>
+        <div className="mt-5 flex justify-center">
+          <Link
+            className="rounded-l bg-gray-200 py-2 px-6 text-gray-800 hover:bg-gray-300"
+            href="/rank"
+          >
+            More
+          </Link>
         </div>
       ) : (
         <div className="mt-10 flex justify-between">
