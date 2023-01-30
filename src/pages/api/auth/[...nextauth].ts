@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
         if (hasName(user.firstName, user.lastName)) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
-          session.user.name = `${user.firstName} ${user.lastName}`;
+          session.user.name = `${user.firstName} ${user.familyName}`;
         }
       }
       return session;

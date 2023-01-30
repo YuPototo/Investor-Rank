@@ -49,8 +49,19 @@ const Navbar: React.FC = () => {
             <></>
           )}
 
-          {/* button */}
-          <div className="ml-10 space-x-4">
+          <div className="ml-10 flex items-center space-x-4">
+            {sessionData ? (
+              <div className="ml-10 space-x-12 ">
+                <Link
+                  href="/profile"
+                  className="text-base font-medium text-white hover:text-indigo-50"
+                >
+                  {sessionData.user?.name}
+                </Link>
+              </div>
+            ) : (
+              <></>
+            )}
             <button
               onClick={sessionData ? () => signOut() : () => signIn()}
               className="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
