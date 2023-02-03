@@ -57,7 +57,12 @@ const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
                         {rank.rank}
                       </td>
                       <td className="whitespace-nowrap py-4 px-3 text-sm font-medium text-gray-900  ">
-                        {getFullName(rank.user.firstName, rank.user.familyName)}
+                        <Link href={`/profile/${rank.user.uniqueName}`}>
+                          {getFullName(
+                            rank.user.firstName,
+                            rank.user.familyName
+                          )}
+                        </Link>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {toPercent(rank.roi)}

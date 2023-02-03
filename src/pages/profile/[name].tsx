@@ -15,15 +15,33 @@ const Profile: NextPage = () => {
     }
   );
 
+  const { userName, userId, joinDate, headline, twitterLink } = data || {};
+
   return (
     <div>
       <div className="mx-auto mt-6 w-10/12 md:w-1/2">
+        <div className="mb-10">
+          <h2 className="text-lg font-medium leading-6 text-gray-900">
+            {userName}
+          </h2>
+          <div className="mt-2">{headline}</div>
+          {twitterLink && (
+            <div className="mt-2">
+              <a href={twitterLink}>Twitter</a>
+            </div>
+          )}
+          <div className="mt-2">
+            <span className="mr-5">Join Date</span>
+            <span>{joinDate}</span>
+          </div>
+        </div>
+
         <h3 className="text-lg font-medium leading-6 text-gray-900">
           Performance
         </h3>
         {data && data.status === "unavailable" && (
           <div className="mt-5 text-gray-700">
-            Your performance metrics will be available in a few minutes.
+            Performance metrics will be available in a few minutes.
           </div>
         )}
         {data && data.status === "success" && (
@@ -53,7 +71,7 @@ const Profile: NextPage = () => {
         <h3 className=" mb-6 text-lg font-medium leading-6 text-gray-900">
           Assets
         </h3>
-        <UserAssetTable showUsd showSellBtn />
+        {userId && <UserAssetTable userId={userId} showUsd showSellBtn />}
       </div>
     </div>
   );

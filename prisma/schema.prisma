@@ -45,6 +45,8 @@ model User {
     firstName       String?
     familyName      String?
     uniqueName      String            @unique
+    headline        String?
+    twitter         String?
     accounts        Account[]
     sessions        Session[]
     userAsset       UserAsset[]

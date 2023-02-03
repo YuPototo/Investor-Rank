@@ -78,6 +78,58 @@ export const userAssetRouter = router({
     const output: UserAssetOutput = { assets, roi };
     return output;
   }),
+  getUserAssets: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const userId = input;
+
+      const userAssets = await ctx.prisma.userAsset.findMany({
+        where: {
+          userId,
+        },
+        select: {
+          id: true,
+          quantity: true,
+          assetEntityId: true,
+          assetEntity: {
+            select: {
+              symbol: true,
+            },
+          },
+        },
+      });
+
+      // get price and value
+
+      const assets = await Promise.all(
+        userAssets.map(async (userAsset) => {
+          const assetEntity = await ctx.prisma.assetEntity.findUnique({
+            where: {
+              id: userAsset.assetEntityId,
+            },
+          });
+
+          if (!assetEntity) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: `Asset entity ${userAsset.assetEntityId} not found`,
+            });
+          }
+          const userAssetOutput: AssetItem = {
+            id: userAsset.id,
+            quantity: Math.round(userAsset.quantity * 100) / 100,
+            symbol: userAsset.assetEntity.symbol,
+            price: assetEntity.price,
+            value:
+              Math.round(assetEntity.price * userAsset.quantity * 10000) /
+              10000,
+          };
+          return userAssetOutput;
+        })
+      );
+
+      return { assets };
+    }),
   getBalance: protectedProcedure.query(async ({ ctx }) => {
     const dollarId = await getDollarId(ctx.prisma);
 
