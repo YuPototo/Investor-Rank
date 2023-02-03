@@ -6,7 +6,7 @@ const EnterNameBanner: React.FC = () => {
   const { data: sessionData } = useSession();
 
   const user = sessionData?.user;
-  const hasName = user?.name;
+  const hasName = !user?.name?.includes("unnamed_user");
 
   const { pathname } = useRouter();
 

@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
-import UserAssetTable from "../components/UserAssetTable";
-import { toPercent } from "../utils/numberFormatter/numberFormattter";
-import { trpc } from "../utils/trpc";
+import UserAssetTable from "../../components/UserAssetTable";
+import { toPercent } from "../../utils/numberFormatter/numberFormattter";
+import { trpc } from "../../utils/trpc";
 
-const Portfolio: NextPage = () => {
+const Profile: NextPage = () => {
   const { data: sessionData } = useSession();
 
   const userId = sessionData?.user?.id;
@@ -56,4 +56,4 @@ const Portfolio: NextPage = () => {
   );
 };
 
-export default Portfolio;
+export default Profile;

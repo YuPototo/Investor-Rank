@@ -44,6 +44,7 @@ model User {
     image           String?
     firstName       String?
     familyName      String?
+    uniqueName      String            @unique
     accounts        Account[]
     sessions        Session[]
     userAsset       UserAsset[]

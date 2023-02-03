@@ -24,11 +24,31 @@ export const userRouter = router({
         });
       }
 
+      // check if unique name exists
+      let uniqueName = `${input.firstName}_${input.familyName}`.toLowerCase();
+
+      const uniqueNameExists = await ctx.prisma.user.findUnique({
+        where: { uniqueName },
+      });
+
+      if (uniqueNameExists) {
+        const numberOfSimilarName = await ctx.prisma.user.count({
+          where: {
+            uniqueName: {
+              startsWith: uniqueName,
+            },
+          },
+        });
+
+        uniqueName = `${uniqueName}_${numberOfSimilarName + 1}`;
+      }
+
       await ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: {
           firstName: input.firstName,
           familyName: input.familyName,
+          uniqueName,
         },
       });
 

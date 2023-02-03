@@ -7,6 +7,7 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 import getDollarId from "../../../server/utils/getDollarId";
 import getInitialDollar from "../../../server/utils/getInitialDollar";
+import randomNumber from "../../../server/utils/randomNumber";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -21,7 +22,14 @@ export const authOptions: NextAuthOptions = {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
           session.user.name = `${user.firstName} ${user.familyName}`;
+        } else {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          session.user.name = user.uniqueName;
         }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        session.user.uniqueName = user.uniqueName;
       }
       return session;
     },
@@ -48,6 +56,9 @@ export const authOptions: NextAuthOptions = {
           id: profile.id,
           email: profile.email,
           image: profile.image_url,
+          // There is a small chance that uniqueName generarted is not unique
+          // But in that case, there would be many users. So, it is not a problem now.
+          uniqueName: "unnamed_user_" + randomNumber(100000),
         };
       },
     }),
@@ -60,7 +71,7 @@ export const authOptions: NextAuthOptions = {
       // get initial dollar param
       const initialDollar = await getInitialDollar(prisma);
 
-      // create dollar for user
+      // create intial asset for user
       await prisma.userAsset.create({
         data: {
           userId: message.user.id,
