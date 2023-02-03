@@ -54,4 +54,25 @@ export const userRouter = router({
 
       return { firstName: input.firstName, familyName: input.familyName };
     }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        // 1000 is picked randomly, should change later
+        headline: z.string().max(1000),
+
+        // todo: check is url, check is from twitter
+        twitter: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          headline: input.headline,
+          twitter: input.twitter,
+        },
+      });
+      return;
+    }),
 });

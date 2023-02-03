@@ -1,4 +1,6 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import UserAssetTable from "../../components/UserAssetTable";
 import { toPercent } from "../../utils/numberFormatter/numberFormattter";
@@ -17,6 +19,11 @@ const Profile: NextPage = () => {
 
   const { userName, userId, joinDate, headline, twitterLink } = data || {};
 
+  // use sessionData
+  const { data: sessionData } = useSession();
+
+  const isUserPage = sessionData?.user?.id === userId;
+
   return (
     <div>
       <div className="mx-auto mt-6 w-10/12 md:w-1/2">
@@ -24,6 +31,15 @@ const Profile: NextPage = () => {
           <h2 className="text-lg font-medium leading-6 text-gray-900">
             {userName}
           </h2>
+          {isUserPage ? (
+            <div className="mt-2">
+              <Link className=" bg-blue-200 p-2" href="/editProfile">
+                edit profile
+              </Link>
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="mt-2">{headline}</div>
           {twitterLink && (
             <div className="mt-2">
