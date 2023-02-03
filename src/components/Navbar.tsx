@@ -3,14 +3,13 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import brandImage from "../../public/brand.png";
 import Link from "next/link";
 
-const navigation = [
-  { name: "Trade", href: "/trade" },
-  { name: "Rank", href: "/rank" },
-  { name: "Profile", href: "/profile" },
-];
-
 const Navbar: React.FC = () => {
   const { data: sessionData } = useSession();
+
+  // tech debts: need to fix this ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const uniqueName = sessionData?.user?.uniqueName;
 
   return (
     <header className="bg-indigo-600">
@@ -34,15 +33,24 @@ const Navbar: React.FC = () => {
           {sessionData ? (
             <div className="flex items-center">
               <div className="ml-10 hidden space-x-12 lg:block">
-                {navigation.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="text-base font-medium text-white hover:text-indigo-50"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                <Link
+                  href="/trade"
+                  className="text-base font-medium text-white hover:text-indigo-50"
+                >
+                  Trade
+                </Link>
+                <Link
+                  href="/rank"
+                  className="text-base font-medium text-white hover:text-indigo-50"
+                >
+                  Rank
+                </Link>
+                <Link
+                  href={`/profile/${uniqueName}`}
+                  className="text-base font-medium text-white hover:text-indigo-50"
+                >
+                  Profile
+                </Link>
               </div>
             </div>
           ) : (
@@ -53,7 +61,7 @@ const Navbar: React.FC = () => {
             {sessionData ? (
               <div className="ml-10 space-x-12 ">
                 <Link
-                  href="/profile"
+                  href={`/profile/${uniqueName}`}
                   className="text-base font-medium text-white hover:text-indigo-50"
                 >
                   {sessionData.user?.name}
@@ -74,15 +82,24 @@ const Navbar: React.FC = () => {
         {/* NavBar icon in small screen */}
         {sessionData ? (
           <div className="flex flex-wrap justify-center space-x-6 py-4 lg:hidden">
-            {navigation.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-base font-medium text-white hover:text-indigo-50"
-              >
-                {link.name}
-              </Link>
-            ))}
+            <Link
+              href="/trade"
+              className="text-base font-medium text-white hover:text-indigo-50"
+            >
+              Trade
+            </Link>
+            <Link
+              href="/rank"
+              className="text-base font-medium text-white hover:text-indigo-50"
+            >
+              Rank
+            </Link>
+            <Link
+              href={`/profile/${uniqueName}`}
+              className="text-base font-medium text-white hover:text-indigo-50"
+            >
+              Profile
+            </Link>
           </div>
         ) : (
           <></>

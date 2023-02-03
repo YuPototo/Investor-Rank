@@ -1,16 +1,19 @@
 import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import UserAssetTable from "../../components/UserAssetTable";
 import { toPercent } from "../../utils/numberFormatter/numberFormattter";
 import { trpc } from "../../utils/trpc";
 
 const Profile: NextPage = () => {
-  const { data: sessionData } = useSession();
-
-  const userId = sessionData?.user?.id;
-  const { data } = trpc.rank.getPerformanceByUser.useQuery(userId as string, {
-    enabled: userId !== undefined,
-  });
+  // get user unique name
+  const router = useRouter();
+  const { name } = router.query;
+  const { data } = trpc.rank.getPerformanceByUniqueName.useQuery(
+    name as string,
+    {
+      enabled: name !== undefined,
+    }
+  );
 
   return (
     <div>

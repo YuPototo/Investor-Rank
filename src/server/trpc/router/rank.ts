@@ -53,6 +53,25 @@ export const rankRouter = router({
 
       return { ...rank, userCount, status: "success" };
     }),
+  getPerformanceByUniqueName: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }): Promise<PerformanceResponse> => {
+      const userId = input;
+
+      const rank = await ctx.prisma.rank.findUnique({
+        where: {
+          userId,
+        },
+      });
+
+      if (!rank) {
+        return { status: "unavailable" };
+      }
+
+      const userCount = await ctx.prisma.rank.count();
+
+      return { ...rank, userCount, status: "success" };
+    }),
 });
 
 type PerformanceResponse =
