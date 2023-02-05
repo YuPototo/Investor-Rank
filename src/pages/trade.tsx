@@ -35,8 +35,12 @@ const Trade: NextPage = () => {
 
         <div className="mx-5 w-[calc(100%_-_10)] sm:w-1/2 ">
           <h2 className="mb-6 text-center font-bold text-indigo-600">Sell</h2>
-          {hasAssets ? (
-            <UserAssetTable showUsd={false} showSellBtn />
+          {sessionData?.user && hasAssets ? (
+            <UserAssetTable
+              userId={sessionData?.user?.id}
+              showUsd={false}
+              showSellBtn
+            />
           ) : (
             <div className="text-center">No sellable assets</div>
           )}

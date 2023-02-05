@@ -1,9 +1,12 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 
 const Transaction: NextPage = () => {
+  const { data: sessionData } = useSession();
+
   const router = useRouter();
   const { transactionId } = router.query;
 
@@ -57,7 +60,9 @@ const Transaction: NextPage = () => {
       <div className="mt-10 flex justify-center">
         <Link
           className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          href="/profile"
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          href={`/profile/${sessionData?.user?.uniqueName}`}
         >
           To your profile
         </Link>
