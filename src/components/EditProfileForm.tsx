@@ -19,7 +19,9 @@ const EnterNameForm: React.FC = () => {
       toast.success("Profile updated");
 
       setTimeout(() => {
-        router.push(`/profile/${sessionData?.user?.name}`);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        router.push(`/profile/${sessionData?.user?.uniqueName}`);
       }, 1000);
     },
     onError(err) {

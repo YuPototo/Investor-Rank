@@ -57,7 +57,7 @@ const Profile: NextPage = () => {
         </h3>
         {data && data.status === "unavailable" && (
           <div className="mt-5 text-gray-700">
-            Performance metrics will be available in a few minutes.
+            Available in a few minutes.
           </div>
         )}
         {data && data.status === "success" && (
