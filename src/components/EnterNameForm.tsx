@@ -21,11 +21,14 @@ const EnterNameForm: React.FC = () => {
   const router = useRouter();
 
   const addName = trpc.user.addName.useMutation({
-    onSuccess({ familyName, firstName }) {
+    onSuccess({ familyName, firstName, uniqueName }) {
       toast.success("Name added");
 
       if (sessionData && sessionData.user) {
         sessionData.user.name = `${firstName} ${familyName}`;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        sessionData.user.uniqueName = uniqueName;
       }
 
       setTimeout(() => {

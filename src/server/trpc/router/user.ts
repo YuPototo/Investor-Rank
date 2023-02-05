@@ -52,7 +52,11 @@ export const userRouter = router({
         },
       });
 
-      return { firstName: input.firstName, familyName: input.familyName };
+      return {
+        firstName: input.firstName,
+        familyName: input.familyName,
+        uniqueName,
+      };
     }),
 
   updateProfile: protectedProcedure

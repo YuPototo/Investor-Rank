@@ -3,7 +3,7 @@ import type { User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 // create a fake user
-function createUser(): Omit<User, "createdAt"> {
+function createUser(): Omit<User, "createdAt" | "headline" | "twitter"> {
   const firstName = faker.name.firstName();
   const familyName = faker.name.lastName();
   const uniqueName = `${firstName}_${familyName}`.toLowerCase();
