@@ -28,13 +28,16 @@ const Profile: NextPage = () => {
     <div>
       <div className="mx-auto mt-6 w-10/12 md:w-1/2">
         <div className="mb-10">
-          <h2 className="text-lg font-medium leading-6 text-gray-900">
+          <h1 className="text-lg font-medium leading-6 text-gray-900">
             {userName}
-          </h2>
+          </h1>
           {isUserPage ? (
             <div className="mt-2">
-              <Link className=" bg-blue-200 p-2" href="/editProfile">
-                edit profile
+              <Link
+                className="inline-flex items-center rounded border border-transparent bg-indigo-100 px-2.5 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                href="/editProfile"
+              >
+                Edit Profile
               </Link>
             </div>
           ) : (
@@ -56,9 +59,7 @@ const Profile: NextPage = () => {
           Performance
         </h3>
         {data && data.status === "unavailable" && (
-          <div className="mt-5 text-gray-700">
-            Available in a few minutes.
-          </div>
+          <div className="mt-5 text-gray-700">Available in a few minutes.</div>
         )}
         {data && data.status === "success" && (
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">

@@ -79,7 +79,7 @@ const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
       {isHome ? (
         <div className="mt-5 flex justify-center">
           <Link
-            className="rounded-l bg-gray-200 py-2 px-6 text-gray-800 hover:bg-gray-300"
+            className="inline-flex items-center rounded border border-transparent bg-indigo-100 px-2.5 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             href="/rank"
           >
             More
@@ -89,7 +89,7 @@ const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
         <div className="mt-10 flex justify-between">
           <button
             className={clsx(
-              "rounded-l bg-gray-200 py-2 px-4 font-bold text-gray-800 hover:bg-gray-300",
+              "inline-flex items-center rounded border border-transparent bg-indigo-100 px-2.5 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
               { invisible: !hasPrevPage }
             )}
             onClick={() => setPage(page - 1)}
@@ -98,7 +98,7 @@ const Leaderboard: React.FC<Props> = ({ isHome = false }) => {
           </button>
           <button
             className={clsx(
-              "rounded-l bg-gray-200 py-2 px-4 font-bold text-gray-800 hover:bg-gray-300",
+              "inline-flex items-center rounded border border-transparent bg-indigo-100 px-2.5 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
               { invisible: !hasNextPage }
             )}
             onClick={() => setPage(page + 1)}

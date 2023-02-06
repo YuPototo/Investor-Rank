@@ -19,6 +19,6 @@ function createUser(): Omit<User, "createdAt" | "headline" | "twitter"> {
 }
 
 // create 100 fake users
-const users = Array.from({ length: 10 }, createUser);
+const users = Array.from({ length: 25 }, createUser);
 
 export default users;
