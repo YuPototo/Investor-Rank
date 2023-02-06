@@ -24,14 +24,59 @@ export const userRouter = router({
         });
       }
 
+      // check if unique name exists
+      let uniqueName = `${input.firstName}_${input.familyName}`.toLowerCase();
+
+      const uniqueNameExists = await ctx.prisma.user.findUnique({
+        where: { uniqueName },
+      });
+
+      if (uniqueNameExists) {
+        const numberOfSimilarName = await ctx.prisma.user.count({
+          where: {
+            uniqueName: {
+              startsWith: uniqueName,
+            },
+          },
+        });
+
+        uniqueName = `${uniqueName}_${numberOfSimilarName + 1}`;
+      }
+
       await ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: {
           firstName: input.firstName,
           familyName: input.familyName,
+          uniqueName,
         },
       });
 
-      return { firstName: input.firstName, familyName: input.familyName };
+      return {
+        firstName: input.firstName,
+        familyName: input.familyName,
+        uniqueName,
+      };
+    }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        // 1000 is picked randomly, should change later
+        headline: z.string().max(1000),
+
+        // todo: check is url, check is from twitter
+        twitter: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          headline: input.headline,
+          twitter: input.twitter,
+        },
+      });
+      return;
     }),
 });

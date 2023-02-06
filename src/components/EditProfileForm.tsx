@@ -6,33 +6,22 @@ import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 
 const NameSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  familyName: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
+  headline: Yup.string().max(1000, "Too Long!"),
+  twitter: Yup.string().url("Invalid Url"),
 });
 
 const EnterNameForm: React.FC = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
 
-  const addName = trpc.user.addName.useMutation({
-    onSuccess({ familyName, firstName, uniqueName }) {
-      toast.success("Name added");
-
-      if (sessionData && sessionData.user) {
-        sessionData.user.name = `${firstName} ${familyName}`;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        sessionData.user.uniqueName = uniqueName;
-      }
+  const updateProfile = trpc.user.updateProfile.useMutation({
+    onSuccess() {
+      toast.success("Profile updated");
 
       setTimeout(() => {
-        router.push(`/`);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        router.push(`/profile/${sessionData?.user?.uniqueName}`);
       }, 1000);
     },
     onError(err) {
@@ -42,12 +31,12 @@ const EnterNameForm: React.FC = () => {
 
   return (
     <Formik
-      initialValues={{ firstName: "", familyName: "" }}
+      initialValues={{ headline: "", twitter: "" }}
       validationSchema={NameSchema}
       onSubmit={(values) => {
-        addName.mutate({
-          firstName: values.firstName,
-          familyName: values.familyName,
+        updateProfile.mutate({
+          headline: values.headline,
+          twitter: values.twitter,
         });
       }}
     >
@@ -63,47 +52,47 @@ const EnterNameForm: React.FC = () => {
         <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div>
             <label
-              htmlFor="firstName"
+              htmlFor="headline"
               className="block text-sm font-medium text-gray-700"
             >
-              First Name
+              Headline
             </label>
             <div className="my-1">
               <input
                 className="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                type="firstName"
-                name="firstName"
+                type="headline"
+                name="headline"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.firstName}
+                value={values.headline}
               />
             </div>
 
             <div className="text-sm text-red-500">
-              {errors.firstName && touched.firstName && errors.firstName}
+              {errors.headline && touched.headline && errors.headline}
             </div>
           </div>
 
           <div>
             <label
-              htmlFor="familyName"
+              htmlFor="twitter"
               className="block text-sm font-medium text-gray-700"
             >
-              Family Name
+              Twitter Link
             </label>
             <div className="my-1">
               <input
                 className="block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 "
-                type="familyName"
-                name="familyName"
+                type="twitter"
+                name="twitter"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.familyName}
+                value={values.twitter}
               />
             </div>
 
             <div className="text-sm text-red-500">
-              {errors.familyName && touched.familyName && errors.familyName}
+              {errors.twitter && touched.twitter && errors.twitter}
             </div>
           </div>
 

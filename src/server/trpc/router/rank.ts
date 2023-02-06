@@ -1,5 +1,6 @@
 import { router, publicProcedure } from "../trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const rankRouter = router({
   get: publicProcedure
@@ -21,6 +22,7 @@ export const rankRouter = router({
               id: true,
               firstName: true,
               familyName: true,
+              uniqueName: true,
             },
           },
         },
@@ -34,24 +36,65 @@ export const rankRouter = router({
 
       return { ranks, hasNextPage, hasPrevPage };
     }),
-  getPerformanceByUser: publicProcedure
+  getPerformanceByUniqueName: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }): Promise<PerformanceResponse> => {
-      const userId = input;
+      const uniqueName = input.toLowerCase();
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          uniqueName,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User don't exists",
+        });
+      }
+
+      // user info
+      const userName = user.firstName
+        ? `${user.firstName} ${user.familyName}`
+        : user.uniqueName;
+
+      // format date to yyyy-mm-dd
+      const joinDate = user.createdAt.toISOString().split("T")[0] as string;
+
+      const headline = user.headline;
+
+      const twitterLink = user.twitter;
 
       const rank = await ctx.prisma.rank.findUnique({
         where: {
-          userId,
+          userId: user.id,
         },
       });
 
       if (!rank) {
-        return { status: "unavailable" };
+        return {
+          status: "unavailable",
+          joinDate,
+          headline: headline || undefined,
+          twitterLink: twitterLink || undefined,
+          userId: user.id,
+          userName,
+        };
       }
 
       const userCount = await ctx.prisma.rank.count();
 
-      return { ...rank, userCount, status: "success" };
+      return {
+        ...rank,
+        userCount,
+        userId: user.id,
+        userName,
+        joinDate,
+        headline: headline || undefined,
+        twitterLink: twitterLink || undefined,
+        status: "success",
+      };
     }),
 });
 
@@ -61,7 +104,18 @@ type PerformanceResponse =
       roi: number;
       rank: number;
       userCount: number;
+
+      userId: string;
+      userName: string;
+      joinDate: string;
+      headline?: string;
+      twitterLink?: string;
     }
   | {
       status: "unavailable";
+      userId: string;
+      userName: string;
+      joinDate: string;
+      headline?: string;
+      twitterLink?: string;
     };

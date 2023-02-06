@@ -44,6 +44,7 @@ CREATE TABLE "User" (
     "image" TEXT,
     "firstName" TEXT,
     "familyName" TEXT,
+    "uniqueName" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -61,6 +62,7 @@ CREATE TABLE "AssetEntity" (
     "name" TEXT NOT NULL,
     "symbol" TEXT NOT NULL,
     "buyable" BOOLEAN NOT NULL DEFAULT true,
+    "price" DOUBLE PRECISION NOT NULL,
     "assetType" "AssetType" NOT NULL,
 
     CONSTRAINT "AssetEntity_pkey" PRIMARY KEY ("id")
@@ -77,29 +79,11 @@ CREATE TABLE "UserAsset" (
 );
 
 -- CreateTable
-CREATE TABLE "Price" (
-    "id" SERIAL NOT NULL,
-    "assetEntityId" INTEGER NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "priceTimeId" INTEGER NOT NULL,
-
-    CONSTRAINT "Price_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "PriceTime" (
-    "id" SERIAL NOT NULL,
-    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "PriceTime_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Transaction" (
     "id" TEXT NOT NULL,
     "assetEntityId" INTEGER NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
-    "priceId" INTEGER NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL,
     "type" "TransactionType" NOT NULL,
     "userId" TEXT,
@@ -163,12 +147,6 @@ CREATE UNIQUE INDEX "AssetEntity_symbol_key" ON "AssetEntity"("symbol");
 CREATE UNIQUE INDEX "UserAsset_userId_assetEntityId_key" ON "UserAsset"("userId", "assetEntityId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Price_assetEntityId_priceTimeId_key" ON "Price"("assetEntityId", "priceTimeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PriceTime_timestamp_key" ON "PriceTime"("timestamp");
-
--- CreateIndex
 CREATE INDEX "Transaction_userId_idx" ON "Transaction"("userId");
 
 -- CreateIndex
@@ -193,16 +171,7 @@ ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_assetEntityId_fkey" FOREIGN KE
 ALTER TABLE "UserAsset" ADD CONSTRAINT "UserAsset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Price" ADD CONSTRAINT "Price_assetEntityId_fkey" FOREIGN KEY ("assetEntityId") REFERENCES "AssetEntity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Price" ADD CONSTRAINT "Price_priceTimeId_fkey" FOREIGN KEY ("priceTimeId") REFERENCES "PriceTime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_assetEntityId_fkey" FOREIGN KEY ("assetEntityId") REFERENCES "AssetEntity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_priceId_fkey" FOREIGN KEY ("priceId") REFERENCES "Price"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

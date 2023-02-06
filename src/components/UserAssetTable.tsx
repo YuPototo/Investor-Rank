@@ -1,17 +1,14 @@
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 
 type Props = {
+  userId: string;
   showUsd: boolean;
   showSellBtn: boolean;
 };
 
-const UserAssetTable: React.FC<Props> = ({ showUsd, showSellBtn }) => {
-  const { data: sessionData } = useSession();
-  const { data, isLoading } = trpc.userAsset.getAll.useQuery(undefined, {
-    enabled: sessionData?.user !== undefined,
-  });
+const UserAssetTable: React.FC<Props> = ({ userId, showUsd, showSellBtn }) => {
+  const { data, isLoading } = trpc.userAsset.getUserAssets.useQuery(userId);
 
   const assets = data?.assets;
   const displayAssets = showUsd

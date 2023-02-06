@@ -11,6 +11,8 @@ const Portfolio: React.FC = () => {
 
   const roi = data?.roi;
 
+  const userId = sessionData?.user?.id;
+
   return (
     <div>
       <h2 className="mb-4 text-center text-2xl">Your Portfolio</h2>
@@ -19,7 +21,7 @@ const Portfolio: React.FC = () => {
         <div className="mb-3 text-center">ROI: {toPercent(roi)}</div>
       ) : null}
 
-      <UserAssetTable showUsd showSellBtn={false} />
+      {userId && <UserAssetTable userId={userId} showUsd showSellBtn={false} />}
     </div>
   );
 };
