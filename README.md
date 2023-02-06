@@ -1,6 +1,5 @@
 # Investor Rank
 
-https://rankvestor.com
 
 A platform for people to predict with **fake** money under **real** name.
 
