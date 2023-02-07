@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = router({
   addName: protectedProcedure
@@ -58,7 +58,6 @@ export const userRouter = router({
         uniqueName,
       };
     }),
-
   updateProfile: protectedProcedure
     .input(
       z.object({
@@ -79,4 +78,9 @@ export const userRouter = router({
       });
       return;
     }),
+  // this procedure is for showing how to do test with tRPC
+  getFirst: publicProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findFirst();
+    return user;
+  }),
 });
