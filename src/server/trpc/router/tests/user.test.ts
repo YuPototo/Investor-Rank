@@ -6,7 +6,7 @@ test("add and get post", async () => {
   const ctx = await createContextInner({ session: null });
   const caller = appRouter.createCaller(ctx);
 
-  const user = await caller.user.getFirst();
+  const userCount = await caller.user.count();
 
-  expect(user).not.toBeNull();
+  expect(userCount).toBe(1);
 });

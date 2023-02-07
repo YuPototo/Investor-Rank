@@ -79,8 +79,8 @@ export const userRouter = router({
       return;
     }),
   // this procedure is for showing how to do test with tRPC
-  getFirst: publicProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findFirst();
-    return user;
+  count: publicProcedure.query(async ({ ctx }) => {
+    const userCount = await ctx.prisma.user.count();
+    return userCount;
   }),
 });
