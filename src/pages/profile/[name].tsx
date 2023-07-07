@@ -88,7 +88,9 @@ const Profile: NextPage = () => {
         <h3 className=" mb-6 text-lg font-medium leading-6 text-gray-900">
           Assets
         </h3>
-        {userId && <UserAssetTable userId={userId} showUsd showSellBtn />}
+        {userId && (
+          <UserAssetTable userId={userId} showUsd showSellBtn={isUserPage} />
+        )}
       </div>
     </div>
   );
